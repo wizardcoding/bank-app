@@ -330,4 +330,5 @@ declare interface getBankByAccountIdProps {
 declare interface animatedCounterProps {
   amount: number;
   decimals?: number;
+  prefix?: string;
 }

@@ -1,11 +1,12 @@
 import AnimatedCounter from "@/components/ui/AnimatedCounter"
+import DonutChart from "@/components/ui/DonutChart"
 
 const TotalBalanceBox = (props: TotalBalanceBoxProps) => {
     const {accounts = [], totalBanks, totalCurrentBalance} = props
     return (
         <section className="total-balance">
             <div className="total-balance-chart">
-                the chardt
+                <DonutChart accounts={accounts}/>
             </div>
             <div className="flex flex-col gap-6">
                 <h2 className="header-2">
@@ -15,9 +16,9 @@ const TotalBalanceBox = (props: TotalBalanceBoxProps) => {
                     <p className ="total-balance-label">
                         Total Current Balance
                     </p>
-                    <p className="total-balance-amount flex-center gap-2">
-                        <AnimatedCounter amount={totalCurrentBalance} decimals={2}/>  
-                    </p>
+                    <div className="total-balance-amount flex-center gap-2">
+                        <AnimatedCounter prefix={'$'} amount={totalCurrentBalance} decimals={2}/>  
+                    </div>
                 </div>
             </div>
         </section>
