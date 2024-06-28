@@ -9,18 +9,7 @@ const Navigation = () => {
     const pathname = usePathname();
 
     return (
-        <nav className="flex flex-col gap-4">
-            <Link className="flex cursor-pointer items-center gap-1 px-4" href="/">
-                <Image 
-                    src="/icons/logo.svg" 
-                    width={34} 
-                    height={34} 
-                    alt="BMTH" 
-                />
-                <h1 className="text-26 font-ibm-flex-serif font-bold text-black-1">
-                    Horizon
-                </h1>
-            </Link>
+        <>
             {sidebarLinks.map((link, index) => {
             const isActive = pathname === link.route ||
                 pathname.startsWith(`${link.route}/`);
@@ -35,16 +24,15 @@ const Navigation = () => {
                             )
                         } 
                     >
-                        <div className="relative size-6">
                             <Image 
                                 src={link.imgURL} 
                                 alt={link.label}
-                                fill
+                                width={20}
+                                height={20}
                                 className={cn({ 'brightness-[3] invert-0': isActive })}
                             />
-                        </div>
                             <p className={
-                                    cn('sidebar-label', 
+                                    cn('text-16 font-semibold text-black-2 sidebar-label', 
                                         { '!text-white': isActive }
                                     )
                                 }
@@ -55,7 +43,7 @@ const Navigation = () => {
                 )
             })}
             user
-        </nav>
+            </>
     )
 }
 

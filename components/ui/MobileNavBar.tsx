@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Navigation from "@/components/ui/Navigation";
+import HomeLink from "@/components/ui/HomeLink";
 import {
     Sheet,
     SheetContent,
@@ -24,6 +25,7 @@ const MobileNavBar = (props: MobileNavProps) => {
             <div className="mobilenav-sheet">
                 <SheetClose asChild>
                     <nav className="flex h-full flex-col gap-6 pt-16 text-white">
+                        <HomeLink/>
                         <Navigation />    
                     </nav>
                 </SheetClose>
