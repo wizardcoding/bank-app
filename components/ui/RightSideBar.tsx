@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from 'next/image'
+import BankCard from "@/components/ui/BankCard";
 
 const RightSideBar = (props: RightSidebarProps) => {
   const { user, banks } = props;
@@ -44,11 +45,21 @@ const RightSideBar = (props: RightSidebarProps) => {
               gap-5"
             >
               <div className="relative z-10">
-                BANK Card 1
+                <BankCard
+                key={banks[0].$id}
+                account={banks[0]}
+                userName={`${firstName} ${lastName}`}
+                showBalance={false}
+              />
               </div>
               {banks[1] && (
                 <div className="absolute right-0 top-8 z-0 w-[90%]">
-                  BANK Card 2
+                  <BankCard
+                    key={banks[1].$id}
+                    account={banks[1]}
+                    userName={`${firstName} ${lastName}`}
+                    showBalance={false}
+                  />
                 </div>
               )}
             </div>
