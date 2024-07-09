@@ -12,7 +12,7 @@ export default function RootLayout({
     lastName: 'Daliance'
   };
   return (
-    <main className="flex h-screen w-full font inter">
+    <main className="flex h-screen w-full font-inter">
         <SideBar user={loggedIn} />
         <div className="flex size-ful flex-col">
           <div className="root-layout">
