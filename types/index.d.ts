@@ -332,3 +332,10 @@ declare interface animatedCounterProps {
   decimals?: number;
   prefix?: string;
 }
+
+declare interface formFieldProps {
+  control: Control;
+  label: string;
+  placeholder: string;
+  name: string;
+}
