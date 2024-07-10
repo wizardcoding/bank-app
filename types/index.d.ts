@@ -339,3 +339,9 @@ declare interface formFieldProps {
   placeholder: string;
   name: string;
 }
+
+declare interface IfooterNavigation {
+  footerNote: string; 
+  navigation: string;
+  label: string;
+}

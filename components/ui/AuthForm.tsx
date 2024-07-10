@@ -1,7 +1,7 @@
 'use client';
 
 import HomeLink from "@/components/ui/HomeLink";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,22 +10,47 @@ import  Field  from "@/components/ui/Field";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 const AuthForm = (props: AuthFormProps) => {
     const{ type = 'sign-in'} = props;
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [footerNavigation, setFooterNavigation] = useState<IfooterNavigation>({
+        footerNote: "", 
+        navigation: "",
+        label: ""
+    });
+
+    useEffect(() => {
+        if(type === 'sign-in') {
+
+            setFooterNavigation({
+                footerNote: "Don't have an account ?", 
+                navigation: "/sign-up",
+                label: "Sign Up"
+            })
+        } else {
+
+            setFooterNavigation({
+                footerNote: "Already have an account", 
+                navigation: "/sign-in",
+                label: "Sign In"
+            })
+        }
+    }, [type]);
+
     const loader = (
         <>
             <Loader2 size={20} className="animate-spin"/>
-            <span className="ml-1">{'Loading...'}</span>
+            <span className="ml-2">{'Loading...'}</span>
         </>
     );
 
     const form = useForm<z.infer<typeof authFormSchema>>({
         resolver: zodResolver(authFormSchema),
         defaultValues: {
-          //username: "",
+          username: "",
           email: "",
           password: "",
         },
@@ -68,26 +93,38 @@ const AuthForm = (props: AuthFormProps) => {
                 {/* {Plaid link component} */}
             </div>
         ): (
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <Field 
-                        name="email"
-                        label="Email" 
-                        placeholder="Enter your Email" 
-                        control={control}
-                    />
+            <>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <Field 
+                            name="email"
+                            label="Email" 
+                            placeholder="Enter your Email" 
+                            control={control}
+                        />
 
-                    <Field 
-                        name="password"
-                        label="Password"
-                        placeholder="Enter your password"
-                        control={control}
-                    />
-                    <Button type="submit" className="form-btn" disabled={isLoading}>
-                        { isLoading ? loader : getLegend() }
-                    </Button>
-                </form>
-            </Form>
+                        <Field 
+                            name="password"
+                            label="Password"
+                            placeholder="Enter your password"
+                            control={control}
+                        />
+                        <div className="flex flex-col gap-4">
+                            <Button type="submit" className="form-btn" disabled={isLoading}>
+                                { isLoading ? loader : getLegend() }
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+                <footer className="flex justify-center gap-1">
+                    <p className="text-14 font-normal text-gray-600"> 
+                        { footerNavigation.footerNote }
+                    </p>
+                    <Link className="form-link" href={footerNavigation.navigation}>
+                        { footerNavigation.label }
+                    </Link>
+                </footer>
+            </>
         )}
     </section>
   )

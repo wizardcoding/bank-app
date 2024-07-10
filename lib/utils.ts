@@ -197,11 +197,11 @@ export const getTransactionStatus = (date: Date) => {
 
 export const authFormSchema = z.object({
 
-  // username: z.string({ description: "Enter User" }).min(4, { 
-  //     message: "User must be at least 4 characters long" 
-  // }).max(20, {
-  //     message: "User Must have a maximum of 20 characters"
-  // }),
+  username: z.string({ description: "Enter User" }).min(4, { 
+      message: "User must be at least 4 characters long" 
+  }).max(20, {
+      message: "User Must have a maximum of 20 characters"
+  }),
 
   email: z.string({ description: "Enter you Email" }).email({ message: "Enter a valid Email" }),
 
