@@ -9,15 +9,23 @@ import { Button } from "@/components/ui/button";
 import  Field  from "@/components/ui/Field";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 const AuthForm = (props: AuthFormProps) => {
     const{ type = 'sign-in'} = props;
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const loader = (
+        <>
+            <Loader2 size={20} className="animate-spin"/>
+            <span className="ml-1">{'Loading...'}</span>
+        </>
+    );
 
     const form = useForm<z.infer<typeof authFormSchema>>({
         resolver: zodResolver(authFormSchema),
         defaultValues: {
-          username: "",
+          //username: "",
           email: "",
           password: "",
         },
@@ -27,9 +35,9 @@ const AuthForm = (props: AuthFormProps) => {
      
       // 2. Define a submit handler.
       function onSubmit(values: z.infer<typeof authFormSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+        setIsLoading(!isLoading);
         console.log(values)
+        setIsLoading(!isLoading);
       }
 
     const getLegend = (): string => {
@@ -75,7 +83,9 @@ const AuthForm = (props: AuthFormProps) => {
                         placeholder="Enter your password"
                         control={control}
                     />
-                    <Button type="submit" className="form-btn">Submit</Button>
+                    <Button type="submit" className="form-btn" disabled={isLoading}>
+                        { isLoading ? loader : getLegend() }
+                    </Button>
                 </form>
             </Form>
         )}
