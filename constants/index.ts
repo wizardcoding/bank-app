@@ -135,3 +135,16 @@ export const transactionCategoryStyles = {
     chipBackgroundColor: "bg-inherit",
   },
 };
+
+export const authFormDefaultValues = {
+  email: "",
+  password: "",
+  firstName: "",
+  lastName: "",
+  address: "",
+  state: "",
+  zipCode: "",
+  birth: "",
+  ssn: "",
+  city: "",
+}

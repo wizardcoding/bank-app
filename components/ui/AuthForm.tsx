@@ -11,11 +11,23 @@ import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { authFormDefaultValues } from '@/constants'
+import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = (props: AuthFormProps) => {
+    const router = useRouter();
     const{ type = 'sign-in'} = props;
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [pageLabel, setPageLabel] = useState("");
+    const formSchema = authFormSchema(type);
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: { ...authFormDefaultValues },
+      });
+
+    const { control } = form;
     const [footerNavigation, setFooterNavigation] = useState<IfooterNavigation>({
         footerNote: "", 
         navigation: "",
@@ -24,19 +36,19 @@ const AuthForm = (props: AuthFormProps) => {
 
     useEffect(() => {
         if(type === 'sign-in') {
-
             setFooterNavigation({
                 footerNote: "Don't have an account ?", 
                 navigation: "/sign-up",
                 label: "Sign Up"
-            })
+            });
+            setPageLabel("Sign In");
         } else {
-
             setFooterNavigation({
                 footerNote: "Already have an account", 
                 navigation: "/sign-in",
                 label: "Sign In"
-            })
+            });
+            setPageLabel("Sign Up");
         }
     }, [type]);
 
@@ -47,29 +59,16 @@ const AuthForm = (props: AuthFormProps) => {
         </>
     );
 
-    const form = useForm<z.infer<typeof authFormSchema>>({
-        resolver: zodResolver(authFormSchema),
-        defaultValues: {
-          username: "",
-          email: "",
-          password: "",
-        },
-      });
-
-      const { control } = form;
-     
-      // 2. Define a submit handler.
-      function onSubmit(values: z.infer<typeof authFormSchema>) {
+    const onSubmit = async(values: z.infer<typeof formSchema>) => {
         setIsLoading(!isLoading);
-        console.log(values)
-        setIsLoading(!isLoading);
-      }
-
-    const getLegend = (): string => {
-        if(user) {
-            return 'Link Account';         
-        } else {
-            return type === 'sign-in' ? 'Sign In' : 'Sign Out';
+        try {
+            type === 'sign-in' ? 
+            console.log({email: values.email, password: values.password}) : 
+            console.log(values);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -79,7 +78,7 @@ const AuthForm = (props: AuthFormProps) => {
             <HomeLink/>
             <div className="flex flex-col gap-1 md:gap-3">
                 <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
-                    {getLegend()}
+                    {pageLabel}
                     <p className="text-16 font-normal text-gray-600">
                         {user ? 'Link your Account to get started' : 'Enter your Details'}
                     </p>
@@ -96,6 +95,71 @@ const AuthForm = (props: AuthFormProps) => {
             <>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        {type === 'sign-up' && (
+                            <>
+                                <div className="flex gap-4">
+                                    <Field
+                                        name="firstName"
+                                        label="Fisrt Name"
+                                        placeholder="Ex: John"
+                                        control={control}
+                                    />
+
+                                    <Field
+                                        name="lastName"
+                                        label="Last Name"
+                                        placeholder="Ex: Doe"
+                                        control={control}
+                                    />
+                                </div>
+
+                                <Field
+                                    name="address"
+                                    label="Address"
+                                    placeholder="Enter your especific Address"
+                                    control={control}
+                                />
+
+                                <Field
+                                    name="city"
+                                    label="City"
+                                    placeholder="ex: San Diego"
+                                    control={control}
+                                />
+
+                                <div className="flex gap-4">
+                                    <Field
+                                        name="state"
+                                        label="State"
+                                        placeholder="ex: NY"
+                                        control={control}
+                                    />
+
+                                    <Field
+                                        name="zipCode"
+                                        label="Postal Code"
+                                        placeholder="ex: 11101"
+                                        control={control}
+                                    />
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <Field
+                                        name="birth"
+                                        label="Date of Brith"
+                                        placeholder="yyyy-mm-dd"
+                                        control={control}
+                                    />
+
+                                    <Field
+                                        name="ssn"
+                                        label="SSN"
+                                        placeholder="ex: 1234"
+                                        control={control}
+                                    />
+                                </div>
+                            </>
+                        )}
                         <Field 
                             name="email"
                             label="Email" 
@@ -111,7 +175,7 @@ const AuthForm = (props: AuthFormProps) => {
                         />
                         <div className="flex flex-col gap-4">
                             <Button type="submit" className="form-btn" disabled={isLoading}>
-                                { isLoading ? loader : getLegend() }
+                                { isLoading ? loader : pageLabel }
                             </Button>
                         </div>
                     </form>
