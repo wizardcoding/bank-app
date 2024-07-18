@@ -65,6 +65,15 @@ const AuthForm = (props: AuthFormProps) => {
             type === 'sign-in' ? 
             console.log({email: values.email, password: values.password}) : 
             console.log(values);
+            if(type === 'sign-in') {
+                const response = await signIn({email: values.email, password: values.password});
+                if(response) {
+                    router.push('/');
+                }
+            }
+            if(type === 'sign-up') {
+                const newUser = await signUp(values);
+            }
         } catch (error) {
             console.log(error);
         } finally {

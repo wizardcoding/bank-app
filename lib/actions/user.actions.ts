@@ -1,8 +1,8 @@
 'user server';
 
-export const signIn = async () => {
+export const signIn = async (data: any) => {
     try {
-        
+        console.log(data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -10,7 +10,7 @@ export const signIn = async () => {
     }
 }
 
-export const signUp = async () => {
+export const signUp = async (data: SignUpParams) => {
     try {
         
     } catch (error) {
