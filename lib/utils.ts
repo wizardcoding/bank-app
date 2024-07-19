@@ -1,7 +1,9 @@
 /* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx";
+import { format } from "path";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -193,3 +195,59 @@ export const getTransactionStatus = (date: Date) => {
 
   return date > twoDaysAgo ? "Processing" : "Success";
 };
+
+export const authFormSchema = (type: string) => z.object({
+
+  firstName: type === 'sign-in' ? z.string().optional() : z.string({ description: "Enter First Name" }).min(2, { 
+    message: "Name must be at least 2 characters long" 
+  }).max(40, {
+      message: "Name Must have a maximum of 40 characters"
+  }),
+
+  lastName: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter Last Name" }).min(2, { 
+    message: "Last Name must be at least 2 characters long" 
+  }).max(40, {
+      message: "Last Name Must have a maximum of 40 characters"
+  }),
+
+  address_1: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter Your Address" }).min(10, { 
+    message: "Address must be at least 10 characters long" 
+  }).max(100, {
+      message: "Address Must have a maximum of 100 characters"
+  }),
+
+  state: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter Your State" }).min(2, { 
+    message: "State must be at least 2 characters long" 
+  }).max(10, {
+      message: "Address Must have a maximum of 10 characters"
+  }),
+
+  city: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter Your City" }).min(2, { 
+    message: "City must be at least 2 characters long" 
+  }).max(15, {
+      message: "City Must have a maximum of 15 characters"
+  }),
+
+  zipCode: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter your Postal Code" }).min(5, { 
+    message: "Postal Code must be at least 5 characters long" 
+  }).max(6, {
+      message: "Postal Code Must have a maximum of 6 characters"
+  }),
+
+  ssn: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter your SSN" }).min(4, { 
+    message: "SSN must be at least 4 characters long" 
+  }).max(10, {
+      message: "SSN Must have a maximum of 10 characters"
+  }),
+
+  dateOfBirth: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter you Birth Date" }).date(),
+
+  email: z.string({ description: "Enter you Email" }).email({ message: "Enter a valid Email" }),
+  
+  password: z.string().min(8, { 
+    message: "Password must be at least 4 characters long" 
+  }).max(20, {
+      message: "Password Must have a maximum of 20 characters"
+  }),
+
+});

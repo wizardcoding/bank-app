@@ -8,12 +8,12 @@ declare type SearchParamProps = {
 // ========================================
 
 declare type SignUpParams = {
-  firstName: string;
+  firstName?: string | undefined;
   lastName: string;
-  address1: string;
+  address_1: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipCode: string;
   dateOfBirth: string;
   ssn: string;
   email: string;
@@ -331,4 +331,17 @@ declare interface animatedCounterProps {
   amount: number;
   decimals?: number;
   prefix?: string;
+}
+
+declare interface formFieldProps {
+  control: Control;
+  label: string;
+  placeholder: string;
+  name: string;
+}
+
+declare interface IfooterNavigation {
+  footerNote: string; 
+  navigation: string;
+  label: string;
 }
