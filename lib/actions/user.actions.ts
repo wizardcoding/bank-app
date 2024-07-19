@@ -29,10 +29,12 @@ export const signUp = async (data: SignUpParams) => {
             sameSite: "strict",
             secure: true,
         });
-
-        return parseStringify(newUserAccount);
+        const response = await parseStringify(newUserAccount);
+        console.log('response', response);
+        return response;
     } catch (error) {
         console.error(error);
+        return parseStringify(error);
     } finally {
         // yeah bitch...
     }

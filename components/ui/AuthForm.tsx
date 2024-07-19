@@ -62,17 +62,23 @@ const AuthForm = (props: AuthFormProps) => {
     const onSubmit = async(values: z.infer<typeof formSchema>) => {
         setIsLoading(!isLoading);
         try {
-            type === 'sign-in' ? 
-            console.log({email: values.email, password: values.password}) : 
-            console.log(values);
             if(type === 'sign-in') {
-                const response = await signIn({email: values.email, password: values.password});
-                if(response) {
-                    router.push('/');
-                }
+                // const response = await signIn({email: values.email, password: values.password});
+                // console.log('response', response);
+                // if(response) {
+                //     router.push('/');
+                // }
             }
             if(type === 'sign-up') {
                 const newUser = await signUp(values);
+                setUser(newUser);
+                if(user) {
+                    setPageLabel('link account');
+                } else if(type === 'sign-up') {
+                    setPageLabel('Sign Up');
+                } else {
+                    setPageLabel('Sign In');
+                }
             }
         } catch (error) {
             console.log(error);
@@ -86,9 +92,9 @@ const AuthForm = (props: AuthFormProps) => {
         <header className="flex flex-call gap-5 md:gap-8">
             <HomeLink/>
             <div className="flex flex-col gap-1 md:gap-3">
-                <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
+                <h1 className="text-18 lg:text-36 font-semibold text-gray-900">
                     {pageLabel}
-                    <p className="text-16 font-normal text-gray-600">
+                    <p className="text-14 font-normal text-gray-600">
                         {user ? 'Link your Account to get started' : 'Enter your Details'}
                     </p>
                 </h1>
