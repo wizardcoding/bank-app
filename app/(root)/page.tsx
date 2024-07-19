@@ -1,7 +1,18 @@
 import HeaderBox from "@/components/ui/HeaderBox"
 import RightSideBar from "@/components/ui/RightSideBar";
 import TotalBalanceBox from "@/components/ui/TotalBalanceBox"
-const Home = () => {
+import { getLoggedInUser } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
+
+const Home = async () => {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    redirect("/sign-in");
+  }
+
+  redirect("/");
+
   const loggedIn = {
     firstName: "Faron",
     lastName: "Daliance",
@@ -27,7 +38,7 @@ const Home = () => {
         RECENT transactions
       </div>
       <RightSideBar
-        user={loggedIn}
+        user={user}
         transactions={[]}
         banks={[{ currentBalance: 56.40 }, { currentBalance: 98.40 }]}
       />

@@ -210,7 +210,7 @@ export const authFormSchema = (type: string) => z.object({
       message: "Last Name Must have a maximum of 40 characters"
   }),
 
-  address: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter Your Address" }).min(10, { 
+  address_1: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter Your Address" }).min(10, { 
     message: "Address must be at least 10 characters long" 
   }).max(100, {
       message: "Address Must have a maximum of 100 characters"
@@ -240,7 +240,7 @@ export const authFormSchema = (type: string) => z.object({
       message: "SSN Must have a maximum of 10 characters"
   }),
 
-  birth: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter you Birth Date" }).date(),
+  dateOfBirth: type === 'sign-in' ? z.string().optional() :  z.string({ description: "Enter you Birth Date" }).date(),
 
   email: z.string({ description: "Enter you Email" }).email({ message: "Enter a valid Email" }),
   

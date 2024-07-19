@@ -141,10 +141,10 @@ export const authFormDefaultValues = {
   password: "",
   firstName: "",
   lastName: "",
-  address: "",
+  address_1: "",
   state: "",
   zipCode: "",
-  birth: "",
+  dateOfBirth: "",
   ssn: "",
   city: "",
 }

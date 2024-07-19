@@ -17,7 +17,7 @@ import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = (props: AuthFormProps) => {
     const router = useRouter();
-    const{ type = 'sign-in'} = props;
+    const{ type } = props;
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [pageLabel, setPageLabel] = useState("");
@@ -123,7 +123,7 @@ const AuthForm = (props: AuthFormProps) => {
                                 </div>
 
                                 <Field
-                                    name="address"
+                                    name="address_1"
                                     label="Address"
                                     placeholder="Enter your especific Address"
                                     control={control}
@@ -154,7 +154,7 @@ const AuthForm = (props: AuthFormProps) => {
 
                                 <div className="flex gap-4">
                                     <Field
-                                        name="birth"
+                                        name="dateOfBirth"
                                         label="Date of Brith"
                                         placeholder="yyyy-mm-dd"
                                         control={control}
