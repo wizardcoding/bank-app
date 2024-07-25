@@ -5,11 +5,11 @@ import { getLoggedInUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 
 const Home = async () => {
-  const user = await getLoggedInUser();
+  const loggedUser = await getLoggedInUser();
 
-  console.log('user', user);
+  console.log('user', loggedUser);
 
-  if (!user) {
+  if (!loggedUser) {
     redirect("/sign-in");
   }
 
