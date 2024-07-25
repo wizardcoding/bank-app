@@ -63,11 +63,11 @@ const AuthForm = (props: AuthFormProps) => {
         setIsLoading(!isLoading);
         try {
             if(type === 'sign-in') {
-                // const response = await signIn({email: values.email, password: values.password});
-                // console.log('response', response);
-                // if(response) {
-                //     router.push('/');
-                // }
+                const response = await signIn({email: values.email, password: values.password});
+                console.log('response', response);
+                if(response) {
+                    router.push('/');
+                }
             }
             if(type === 'sign-up') {
                 const newUser = await signUp(values);

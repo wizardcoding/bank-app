@@ -7,17 +7,17 @@ import { redirect } from "next/navigation";
 const Home = async () => {
   const user = await getLoggedInUser();
 
+  console.log('user', user);
+
   if (!user) {
     redirect("/sign-in");
   }
 
-  redirect("/");
-
-  const loggedIn = {
-    firstName: "Faron",
-    lastName: "Daliance",
-    email: "xayuzaii@hotmail.com"
-  };
+  // const loggedIn = {
+  //   firstName: "Faron",
+  //   lastName: "Daliance",
+  //   email: "xayuzaii@hotmail.com"
+  // };
 
   return (
     <section className="home">
@@ -26,7 +26,7 @@ const Home = async () => {
           <HeaderBox 
             type="greeting"
             title="Welcome"
-            user={loggedIn?.firstName || "Guest"}
+            user={user?.name || "Guest"}
             subtext="Access and Manage your account and transactions with ease"
           />
           <TotalBalanceBox
