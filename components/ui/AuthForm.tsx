@@ -21,7 +21,6 @@ const AuthForm = (props: AuthFormProps) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [pageLabel, setPageLabel] = useState("");
-    // const userSession = await getLoggedInUser();
     const formSchema = authFormSchema(type);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
