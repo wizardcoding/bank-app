@@ -13,12 +13,6 @@ const Home = async () => {
     redirect("/sign-in");
   }
 
-  // const loggedIn = {
-  //   firstName: "Faron",
-  //   lastName: "Daliance",
-  //   email: "xayuzaii@hotmail.com"
-  // };
-
   return (
     <section className="home">
       <div className="home-content">
