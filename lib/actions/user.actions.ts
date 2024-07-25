@@ -1,13 +1,38 @@
 'use server';
-import { createSessionClient } from "@/lib/server/appwrite";
-import { ID } from "node-appwrite";
-import { createAdminClient } from "@/lib/server/appwrite";
+import { createSessionClient, createAdminClient } from "@/lib/server/appwrite";
+import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "@/lib/utils";
 
-export const signIn = async (data: any) => {
+const {
+    APPWRITE_DATABASE_ID: DATABASE_ID,
+    APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
+    APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
+  } = process.env;
+
+export const getUserInfo = async ({ userId }: getUserInfoProps) => {
     try {
-        console.log(data);
+      const { database } = await createAdminClient();
+  
+      const user = await database.listDocuments(
+        DATABASE_ID!,
+        USER_COLLECTION_ID!,
+        [Query.equal('userId', [userId])]
+      )
+  
+      return parseStringify(user.documents[0]);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+export const signIn = async (data: signInProps) => {
+    const { email, password } = data;
+    try {
+        const { account } = await createSessionClient();
+        const response = await account.createEmailPasswordSession(email, password);
+        
+        return parseStringify(response);
     } catch (error) {
         console.error(error);
     } finally {
@@ -40,12 +65,16 @@ export const signUp = async (data: SignUpParams) => {
     }
 }
 
-export const getLoggedInUser = async () => {
+export async function getLoggedInUser() {
     try {
       const { account } = await createSessionClient();
-      const response = await account.get();
-      return parseStringify(response);
+      const result = await account.get();
+  
+      const user = await getUserInfo({ userId: result.$id})
+  
+      return parseStringify(user);
     } catch (error) {
+      console.log(error)
       return null;
     }
   }
