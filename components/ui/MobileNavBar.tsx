@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Navigation from "@/components/ui/Navigation";
 import HomeLink from "@/components/ui/HomeLink";
+import Footer from "@/components/ui/Footer";
 import {
     Sheet,
     SheetContent,
@@ -9,6 +10,7 @@ import {
   } from "@/components/ui/sheet"
 
 const MobileNavBar = (props: MobileNavProps) => {
+    const { user } = props;
   return (
     <section className="w-full max-w-[264px]">
         <Sheet>
@@ -29,8 +31,10 @@ const MobileNavBar = (props: MobileNavProps) => {
                         <Navigation />    
                     </nav>
                 </SheetClose>
+                <Footer user={user} type='mobile' />
             </div>
             </SheetContent>
+            
         </Sheet>
     </section>
   )
