@@ -1,23 +1,10 @@
 import HeaderBox from "@/components/ui/HeaderBox"
 import RightSideBar from "@/components/ui/RightSideBar";
 import TotalBalanceBox from "@/components/ui/TotalBalanceBox"
-import { getLoggedInUser } from "@/lib/actions/user.actions";
-import { redirect } from "next/navigation";
+import { isLogged } from "@/lib/auth/actions";
 
 const Home = async () => {
-  const user = await getLoggedInUser();
-
-  console.log('user', user);
-
-  if (!user) {
-    redirect("/sign-in");
-  }
-
-  // const loggedIn = {
-  //   firstName: "Faron",
-  //   lastName: "Daliance",
-  //   email: "xayuzaii@hotmail.com"
-  // };
+  const loggedUser = await isLogged();
 
   return (
     <section className="home">
@@ -26,7 +13,7 @@ const Home = async () => {
           <HeaderBox 
             type="greeting"
             title="Welcome"
-            user={user?.name || "Guest"}
+            user={loggedUser?.name || "Guest"}
             subtext="Access and Manage your account and transactions with ease"
           />
           <TotalBalanceBox
@@ -38,7 +25,7 @@ const Home = async () => {
         RECENT transactions
       </div>
       <RightSideBar
-        user={user}
+        user={loggedUser}
         transactions={[]}
         banks={[{ currentBalance: 56.40 }, { currentBalance: 98.40 }]}
       />

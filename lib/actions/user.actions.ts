@@ -34,9 +34,9 @@ export const signIn = async (data: signInProps) => {
         
         return parseStringify(response);
     } catch (error) {
-        console.error(error);
-    } finally {
-        // yeah bitch...
+        console.log(error);
+
+        return null;
     }
 }
 
@@ -45,7 +45,13 @@ export const signUp = async (data: SignUpParams) => {
     try {
         const { account } = await createAdminClient();
 
-        const newUserAccount = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
+        const newUserAccount = await account.create(
+          ID.unique(),
+          email,
+          password, 
+          `${firstName} ${lastName}`
+        );
+
         const session = await account.createEmailPasswordSession(email, password);
 
         cookies().set("bank-session", session.secret, {
@@ -55,26 +61,36 @@ export const signUp = async (data: SignUpParams) => {
             secure: true,
         });
         const response = await parseStringify(newUserAccount);
-        console.log('response', response);
+        
         return response;
     } catch (error) {
-        console.error(error);
-        return parseStringify(error);
-    } finally {
-        // yeah bitch...
+        console.log(error);
+
+        return null;
     }
 }
 
-export async function getLoggedInUser() {
+export const getLoggedInUser = async() => {
     try {
       const { account } = await createSessionClient();
-      const result = await account.get();
+      const user = await account.get();
   
-      //const user = await getUserInfo({ userId: result.$id})
+      //const user = await getUserInfo({ userId: user.$id})
   
-      return parseStringify(result);
+      return parseStringify(user);
     } catch (error) {
       console.log(error)
       return null;
     }
-  }
+}
+
+export const logOut = async() => {
+    try {
+      const { account } = await createSessionClient();
+      await account.deleteSession('current');
+      cookies().delete('bank-session');
+    } catch(error) {
+      console.log(error);
+      return null;
+    }
+}

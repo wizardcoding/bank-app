@@ -64,7 +64,7 @@ const AuthForm = (props: AuthFormProps) => {
         try {
             if(type === 'sign-in') {
                 const response = await signIn({email: values.email, password: values.password});
-                console.log('response', response);
+                
                 if(response) {
                     router.push('/');
                 }
