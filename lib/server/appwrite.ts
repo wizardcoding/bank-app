@@ -38,4 +38,18 @@ export async function createAdminClient() {
         return new Users(client);
     }
   };
-}  
+} 
+
+export async function createSessionLogin() {
+  const client = new Client()
+    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
+    .setKey(process.env.NEXT_APPWRITE_KEY!);
+
+  
+  return {
+    get account() {
+      return new Account(client);
+    },
+  };
+}
