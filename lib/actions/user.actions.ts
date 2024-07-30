@@ -1,8 +1,17 @@
 'use server';
-import { createSessionClient, createAdminClient } from "@/lib/server/appwrite";
+import { createSessionClient, createAdminClient, createSessionLogin } from "@/lib/server/appwrite";
 import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "@/lib/utils";
+
+const createSessionCookie = (secret: string): void => {
+  cookies().set("bank-session", secret, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true,
+});
+}
 
 const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -29,10 +38,12 @@ export const getUserInfo = async ({ userId }: getUserInfoProps) => {
 export const signIn = async (data: signInProps) => {
     const { email, password } = data;
     try {
-        const { account } = await createSessionClient();
+        const { account } = await createSessionLogin();
         const response = await account.createEmailPasswordSession(email, password);
+        createSessionCookie(response.secret);
+        const signedUp = await parseStringify(response);
         
-        return parseStringify(response);
+        return signedUp;
     } catch (error) {
         console.log(error);
 
@@ -51,15 +62,8 @@ export const signUp = async (data: SignUpParams) => {
           password, 
           `${firstName} ${lastName}`
         );
-
         const session = await account.createEmailPasswordSession(email, password);
-
-        cookies().set("bank-session", session.secret, {
-            path: "/",
-            httpOnly: true,
-            sameSite: "strict",
-            secure: true,
-        });
+        createSessionCookie(session.secret);
         const response = await parseStringify(newUserAccount);
         
         return response;
