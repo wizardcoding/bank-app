@@ -4,20 +4,21 @@ import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "@/lib/utils";
 
-const createSessionCookie = (secret: string): void => {
-  cookies().set("bank-session", secret, {
-    path: "/",
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-});
-}
-
 const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
     APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
     APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
+    APP_SESSION_COOKIE_NAME
   } = process.env;
+
+const createSessionCookie = (secret: string): void => {
+  cookies().set(APP_SESSION_COOKIE_NAME!, secret, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true,
+  });
+}
 
 export const getUserInfo = async ({ userId }: getUserInfoProps) => {
     try {
@@ -92,9 +93,10 @@ export const logOut = async() => {
     try {
       const { account } = await createSessionClient();
       await account.deleteSession('current');
-      cookies().delete('bank-session');
+      cookies().delete(APP_SESSION_COOKIE_NAME!);
     } catch(error) {
       console.log(error);
+
       return null;
     }
 }
