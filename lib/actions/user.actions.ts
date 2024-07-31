@@ -3,6 +3,9 @@ import { createSessionClient, createAdminClient, createSessionLogin } from "@/li
 import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "@/lib/utils";
+import { Products, CountryCode } from "plaid";
+import { PlaidClient } from "@/lib/server/plaid"
+
 
 const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -99,4 +102,29 @@ export const logOut = async() => {
 
       return null;
     }
+}
+
+export const createLinkToken = async (user: User) => {
+  try {
+    const tokenParams = {
+      user: {
+        client_user_id: user.$id,
+
+      },
+      client_name: user.name,
+      products: ['auth'] as Products[],
+      language: 'en',
+      country_codes: ['US'] as CountryCode[],
+    };
+
+    const response = await PlaidClient.linkTokenCreate(tokenParams);
+
+    return parseStringify({
+      linkToken: response.data.link_token
+    });
+  } catch(error) {
+    console.log('createLinkToken - error', error);
+
+    return null;
+  }
 }

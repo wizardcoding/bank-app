@@ -1,19 +1,20 @@
 'use client';
 
-import HomeLink from "@/components/ui/HomeLink";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import  Field  from "@/components/ui/Field";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
 import { authFormDefaultValues } from '@/constants'
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
+import HomeLink from "@/components/ui/HomeLink";
+import Field from "@/components/ui/Field";
+import Link from "next/link";
+import PlaidLink from "@/components/ui/PlaidLink";
 
 const AuthForm = (props: AuthFormProps) => {
     const router = useRouter();
@@ -104,7 +105,7 @@ const AuthForm = (props: AuthFormProps) => {
         </header>
         {user ? (
             <div className="flex flex-col gap-4">
-                {/* {Plaid link component} */}
+                <PlaidLink user={user} variant={'primary'}/>
             </div>
         ): (
             <>
