@@ -104,7 +104,7 @@ export const logOut = async() => {
     }
 }
 
-export const createLinkToken = async (user: User) => {
+export const createLinkToken = async(user: User) => {
   try {
     const tokenParams = {
       user: {
@@ -127,4 +127,23 @@ export const createLinkToken = async (user: User) => {
 
     return null;
   }
+}
+
+export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenProps) => {
+    const {publicToken, user} = publicTokenArgs;
+    try {
+        const response = await PlaidClient.itemPublicTokenExchange({public_token: publicToken});
+
+        const accessToken = response.data.access_token;
+        const itemId = response.data.item_id;
+        const accountResponse = await PlaidClient.accountsGet({access_token: accessToken});
+        const accountData = accountResponse.data.accounts[0];
+      
+    } catch (error) {
+        console.log('exchangePublicToken - error', error);
+
+        return null;
+      
+    }
+
 }

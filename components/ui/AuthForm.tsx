@@ -10,7 +10,7 @@ import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { authFormDefaultValues } from '@/constants'
 import { useRouter } from "next/navigation";
-import { signIn, signUp } from "@/lib/actions/user.actions";
+import { createLinkToken, signIn, signUp } from "@/lib/actions/user.actions";
 import HomeLink from "@/components/ui/HomeLink";
 import Field from "@/components/ui/Field";
 import Link from "next/link";
@@ -27,7 +27,6 @@ const AuthForm = (props: AuthFormProps) => {
         resolver: zodResolver(formSchema),
         defaultValues: { ...authFormDefaultValues },
       });
-
     const { control } = form;
     const [footerNavigation, setFooterNavigation] = useState<IfooterNavigation>({
         footerNote: "", 
