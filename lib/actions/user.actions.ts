@@ -3,7 +3,7 @@ import { createSessionClient, createAdminClient, createSessionLogin } from "@/li
 import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "@/lib/utils";
-import { Products, CountryCode } from "plaid";
+import { Products, CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum } from "plaid";
 import { PlaidClient } from "@/lib/server/plaid"
 
 
@@ -133,14 +133,27 @@ export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenPro
     const {publicToken, user} = publicTokenArgs;
     try {
         const response = await PlaidClient.itemPublicTokenExchange({public_token: publicToken});
-
         const accessToken = response.data.access_token;
         const itemId = response.data.item_id;
         const accountResponse = await PlaidClient.accountsGet({access_token: accessToken});
         const accountData = accountResponse.data.accounts[0];
-      
+        const request: ProcessorTokenCreateRequest = {
+          access_token: accessToken,
+          account_id: accountData.account_id,
+          processor: "dwolla" as ProcessorTokenCreateRequestProcessorEnum,
+        };
+        const processorTokenResponse = await PlaidClient.processorTokenCreate(request);
+        const processorToken = processorTokenResponse.data.processor_token;
+        const fundingSourceUrl = await addFundingSource({
+          dwollaCustomerId: user.dwollaCustomerId,
+          processorToken,
+          bankName: accountData.name,
+        });
+        if(!fundingSourceUrl) {
+          throw Error;
+        }
     } catch (error) {
-        console.log('exchangePublicToken - error', error);
+        console.log('exchangePublicToken - error ', error);
 
         return null;
       
