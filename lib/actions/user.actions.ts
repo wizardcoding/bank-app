@@ -2,11 +2,12 @@
 import { createSessionClient, createAdminClient, createSessionLogin } from "@/lib/server/appwrite";
 import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
-import { encryptId, parseStringify } from "@/lib/utils";
+import { encryptId, parseStringify, extractCustomerIdFromUrl } from "@/lib/utils";
 import { Products, CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum } from "plaid";
 import { PlaidClient } from "@/lib/server/plaid"
 import { revalidatePath } from "next/cache";
-import { addFundingSource } from "dwolla-v2";
+import { addFundingSource, createDwollaCustomer } from "@/lib/server/dwolla.actions";
+import { string } from "zod";
 
 
 const {
@@ -57,10 +58,10 @@ export const signIn = async (data: signInProps) => {
     }
 }
 
-export const signUp = async (data: SignUpParams) => {
-    const { email, password, firstName, lastName } = data;
+export const signUp = async (userData: SignUpParams) => {
+    const { email, password, firstName, lastName } = userData;
     try {
-        const { account } = await createAdminClient();
+        const { account, database } = await createAdminClient();
 
         const newUserAccount = await account.create(
           ID.unique(),
@@ -68,9 +69,37 @@ export const signUp = async (data: SignUpParams) => {
           password, 
           `${firstName} ${lastName}`
         );
+
+        if(!newUserAccount) {
+          throw new Error("Error Creating user.");
+        }
+
+        const dwollaCustomerUrl = createDwollaCustomer({
+          ... userData,
+          type: 'personal'
+        });
+
+        if(!dwollaCustomerUrl) {
+          throw new Error("Error Creating Dwolla Customer.");
+        }
+
+        const dwollaCustomerId = extractCustomerIdFromUrl(parseStringify(dwollaCustomerUrl));
+
+        const newUser = await database.createDocument(
+          DATABASE_ID!,
+          USER_COLLECTION_ID!,
+          ID.unique(),
+          {
+            ...userData,
+            userId: newUserAccount.$id,
+            dwollaCustomerId,
+            dwollaCustomerUrl
+          }
+        );
+
         const session = await account.createEmailPasswordSession(email, password);
         createSessionCookie(session.secret);
-        const response = await parseStringify(newUserAccount);
+        const response = await parseStringify(newUser);
         
         return response;
     } catch (error) {
