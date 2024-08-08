@@ -347,3 +347,10 @@ declare interface IfooterNavigation {
   navigation: string;
   label: string;
 }
+
+declare interface CreateFundingSourceOptions {
+  customerId: string;
+  fundingSourceName: string;
+  plaidToken: string;
+  _links: object;
+}
