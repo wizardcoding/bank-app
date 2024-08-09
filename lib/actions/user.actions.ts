@@ -12,7 +12,9 @@ const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
     APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
     APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
-    APP_SESSION_COOKIE_NAME
+    APP_SESSION_COOKIE_NAME,
+    PLAID_SECRET,
+    PLAID_CLIENT_ID,
   } = process.env;
 
 const createSessionCookie = (secret: string): void => {
@@ -56,8 +58,8 @@ export const signIn = async (data: signInProps) => {
     }
 }
 
-export const signUp = async (userData: SignUpParams) => {
-    const { email, password, firstName, lastName, address_1, zipCode, ssn } = userData;
+export const signUp = async ({password, ...userData}: SignUpParams) => {
+    const { email, firstName, lastName, address_1, zipCode, ssn, dateOfBirth } = userData;
     try {
         const { account, database } = await createAdminClient();
 
@@ -71,7 +73,7 @@ export const signUp = async (userData: SignUpParams) => {
         if(!newUserAccount) {
           throw new Error("Error Creating user.");
         }
-        const dwollaUserData = {Address1: address_1, PostalCode: zipCode, Ssn: ssn, ...userData}
+        const dwollaUserData = {address1: address_1, postalCode: zipCode, Ssn: ssn, dateOfBrith: dateOfBirth, ...userData}
         const dwollaCustomerUrl = await createDwollaCustomer({
           ...dwollaUserData,
           type: 'personal'
@@ -133,39 +135,30 @@ export const logOut = async() => {
     }
 }
 
-export const createLinkToken = async(user: User) => {
+export const createLinkToken = async (user: User) => {
+  const { firstName, lastName } = user;
   try {
     const tokenParams = {
       user: {
-        client_user_id: user.$id,
+        client_user_id: user.$id
       },
-      client_name: user.name,
+      client_name: `${firstName} ${lastName}`,
       products: ['auth'] as Products[],
       language: 'en',
       country_codes: ['US'] as CountryCode[],
-    };
+      client_id: PLAID_CLIENT_ID,
+      secret: PLAID_SECRET,
+    }
 
     const response = await PlaidClient.linkTokenCreate(tokenParams);
 
-    return parseStringify({
-      linkToken: response.data.link_token
-    });
-  } catch(error) {
-    console.log('createLinkToken - error', error);
-
-    return null;
+    return parseStringify({ linkToken: response.data.link_token })
+  } catch (error) {
+    console.log(error);
   }
 }
 
 export const createBankAccount = async(bankAccountParams: createBankAccountProps) => {
-  const { 
-    userId,
-    bankId,
-    accountId,
-    accessToken,
-    fundingSourceUrl,
-    sharableId
-  } = bankAccountParams;
 
   try {
     const { database } = await createAdminClient();
