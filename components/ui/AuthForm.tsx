@@ -1,19 +1,20 @@
 'use client';
 
-import HomeLink from "@/components/ui/HomeLink";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import  Field  from "@/components/ui/Field";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
 import { authFormDefaultValues } from '@/constants'
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
+import HomeLink from "@/components/ui/HomeLink";
+import Field from "@/components/ui/Field";
+import Link from "next/link";
+import PlaidLink from "@/components/ui/PlaidLink";
 
 const AuthForm = (props: AuthFormProps) => {
     const router = useRouter();
@@ -26,7 +27,6 @@ const AuthForm = (props: AuthFormProps) => {
         resolver: zodResolver(formSchema),
         defaultValues: { ...authFormDefaultValues },
       });
-
     const { control } = form;
     const [footerNavigation, setFooterNavigation] = useState<IfooterNavigation>({
         footerNote: "", 
@@ -60,17 +60,30 @@ const AuthForm = (props: AuthFormProps) => {
     );
 
     const onSubmit = async(values: z.infer<typeof formSchema>) => {
+        const {email, password, firstName, lastName, address_1, city, state, zipCode, dateOfBirth, ssn  } = values;
         setIsLoading(!isLoading);
         try {
             if(type === 'sign-in') {
-                const response = await signIn({email: values.email, password: values.password});
+                const response = await signIn({email: email!, password: password!});
                 
                 if(response) {
                     router.push('/');
                 }
             }
+
             if(type === 'sign-up') {
-                const newUser = await signUp(values);
+                const newUser = await signUp({
+                    email,
+                    password,
+                    firstName: firstName!,
+                    lastName: lastName!,
+                    address_1: address_1!,
+                    city: city!,
+                    state: state!,
+                    zipCode: zipCode!,
+                    dateOfBirth: dateOfBirth!,
+                    ssn: ssn!
+                });
                 setUser(newUser);
                 if(user) {
                     setPageLabel('link account');
@@ -104,7 +117,7 @@ const AuthForm = (props: AuthFormProps) => {
         </header>
         {user ? (
             <div className="flex flex-col gap-4">
-                {/* {Plaid link component} */}
+                <PlaidLink user={user} variant={'primary'}/>
             </div>
         ): (
             <>

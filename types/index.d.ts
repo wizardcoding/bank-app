@@ -8,14 +8,14 @@ declare type SearchParamProps = {
 // ========================================
 
 declare type SignUpParams = {
-  firstName?: string;
-  lastName?: string;
-  address_1?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  dateOfBirth?: string;
-  ssn?: string;
+  firstName: string;
+  lastName: string;
+  address_1: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  dateOfBirth: string;
+  ssn: string;
   email: string;
   password: string;
 };
@@ -34,10 +34,10 @@ declare type User = {
   name: string;
   firstName: string;
   lastName: string;
-  address1: string;
+  address_1: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipCode: string;
   dateOfBirth: string;
   ssn: string;
 };
@@ -129,10 +129,10 @@ declare type NewDwollaCustomerParams = {
   lastName: string;
   email: string;
   type: string;
-  address1: string;
+  address_1: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipCode: string;
   dateOfBirth: string;
   ssn: string;
 };
@@ -346,4 +346,11 @@ declare interface IfooterNavigation {
   footerNote: string; 
   navigation: string;
   label: string;
+}
+
+declare interface CreateFundingSourceOptions {
+  customerId: string;
+  fundingSourceName: string;
+  plaidToken: string;
+  _links: object;
 }
