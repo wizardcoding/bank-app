@@ -34,10 +34,10 @@ declare type User = {
   name: string;
   firstName: string;
   lastName: string;
-  address1: string;
+  address_1: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipCode: string;
   dateOfBirth: string;
   ssn: string;
 };

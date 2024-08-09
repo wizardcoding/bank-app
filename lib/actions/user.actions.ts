@@ -7,8 +7,6 @@ import { Products, CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreat
 import { PlaidClient } from "@/lib/server/plaid"
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "@/lib/server/dwolla.actions";
-import { string } from "zod";
-
 
 const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -59,7 +57,7 @@ export const signIn = async (data: signInProps) => {
 }
 
 export const signUp = async (userData: SignUpParams) => {
-    const { email, password, firstName, lastName } = userData;
+    const { email, password, firstName, lastName, address_1, zipCode, ssn } = userData;
     try {
         const { account, database } = await createAdminClient();
 
@@ -73,9 +71,9 @@ export const signUp = async (userData: SignUpParams) => {
         if(!newUserAccount) {
           throw new Error("Error Creating user.");
         }
-
-        const dwollaCustomerUrl = createDwollaCustomer({
-          ... userData,
+        const dwollaUserData = {Address1: address_1, PostalCode: zipCode, Ssn: ssn, ...userData}
+        const dwollaCustomerUrl = await createDwollaCustomer({
+          ...dwollaUserData,
           type: 'personal'
         });
 
@@ -83,7 +81,7 @@ export const signUp = async (userData: SignUpParams) => {
           throw new Error("Error Creating Dwolla Customer.");
         }
 
-        const dwollaCustomerId = extractCustomerIdFromUrl(parseStringify(dwollaCustomerUrl));
+        const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
 
         const newUser = await database.createDocument(
           DATABASE_ID!,
