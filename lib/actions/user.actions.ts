@@ -47,8 +47,9 @@ export const signIn = async (data: signInProps) => {
     try {
         const { account } = await createSessionLogin();
         const response = await account.createEmailPasswordSession(email, password);
+        const user = await getUserInfo({userId: response.userId});
         createSessionCookie(response.secret);
-        const signedUp = await parseStringify(response);
+        const signedUp = await parseStringify(user);
         
         return signedUp;
     } catch (error) {
@@ -62,7 +63,7 @@ export const signUp = async ({password, ...userData}: SignUpParams) => {
     const { email, firstName, lastName, address_1, zipCode, ssn, dateOfBirth } = userData;
     try {
         const { account, database } = await createAdminClient();
-
+        
         const newUserAccount = await account.create(
           ID.unique(),
           email,
@@ -73,7 +74,9 @@ export const signUp = async ({password, ...userData}: SignUpParams) => {
         if(!newUserAccount) {
           throw new Error("Error Creating user.");
         }
-        const dwollaUserData = {address1: address_1, postalCode: zipCode, Ssn: ssn, dateOfBrith: dateOfBirth, ...userData}
+
+        const dwollaUserData = {address1: address_1, postalCode: zipCode, Ssn: ssn, dateOfBrith: dateOfBirth, ...userData};
+        
         const dwollaCustomerUrl = await createDwollaCustomer({
           ...dwollaUserData,
           type: 'personal'
@@ -113,7 +116,6 @@ export const getLoggedInUser = async() => {
     try {
       const { account } = await createSessionClient();
       const user = await account.get();
-  
       //const user = await getUserInfo({ userId: user.$id})
   
       return parseStringify(user);
@@ -138,6 +140,7 @@ export const logOut = async() => {
 export const createLinkToken = async (user: User) => {
   const { firstName, lastName } = user;
   try {
+
     const tokenParams = {
       user: {
         client_user_id: user.$id
@@ -180,7 +183,6 @@ export const createBankAccount = async(bankAccountParams: createBankAccountProps
 
 export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenProps) => {
     const {publicToken, user} = publicTokenArgs;
-
     try {
         const response = await PlaidClient.itemPublicTokenExchange({public_token: publicToken});
         const accessToken = response.data.access_token;
@@ -227,4 +229,40 @@ export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenPro
         return null;
     }
 
+}
+
+export const getBank = async (userData: getBankProps) => {
+  const { documentId } = userData;
+  try {
+    const { database } = await createAdminClient();
+
+    const bank = await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,
+      [Query.equal('$id', [documentId])]
+    );
+
+    return parseStringify(bank.documents);
+    
+  } catch (error) {
+    console.log('getBank: ', error);
+  }
+}
+
+export const getBanks = async (userData: getBanksProps) => {
+  const { userId } = userData;
+  try {
+    const { database } = await createAdminClient();
+
+    const banks = await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,
+      [Query.equal('userId', [userId])]
+    );
+
+    return parseStringify(banks.documents);
+    
+  } catch (error) {
+    console.log('getBanks: ', error);
+  }
 }
