@@ -5,7 +5,8 @@ import { logOut } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 
 const Footer = ({ user, type = 'desktop' }: FooterProps) => {
-    const { email, name = '', firstName } = user;
+    const { email, firstName = '', lastName = '' } = user;
+    const fullName = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
     const cssNameStyle = type === 'desktop' ? 'footer_name' : 'footer_name-mobile';
     const cssEmailStyle = type === 'desktop' ? 'footer_email' : 'footer_email-mobile';
 
@@ -21,12 +22,12 @@ const Footer = ({ user, type = 'desktop' }: FooterProps) => {
   return (
     <footer className="footer">
       <div className={cssNameStyle}>
-        <p className="text-xl font-bold text-gray-700">
-          {name[0]}
+        <p className="text-4sm font-bold text-gray-700">
+          {`${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`}
         </p>
       </div>
       <div className={cssEmailStyle}>
-        <h1 className="text-14 truncate font-semibold text-gray-700">{name}</h1>
+        <h1 className="text-14 truncate font-semibold text-gray-700">{fullName}</h1>
         <p className="text-14 truncate font-normail text-gray-600">
           {email}
         </p>

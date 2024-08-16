@@ -24,10 +24,9 @@ const dwollaClient = new Client({
 });
 
 // Create a Dwolla Funding Source using a Plaid Processor Token
-export const createFundingSource = async (
-  options: CreateFundingSourceOptions
-) => {
+export const createFundingSource = async (options: CreateFundingSourceOptions) => {
   try {
+
     return await dwollaClient
       .post(`customers/${options.customerId}/funding-sources`, {
         name: options.fundingSourceName,
@@ -45,16 +44,16 @@ export const createOnDemandAuthorization = async () => {
       "on-demand-authorizations"
     );
     const authLink = onDemandAuthorization.body._links;
+
     return authLink;
   } catch (err) {
     console.error("Creating an On Demand Authorization Failed: ", err);
   }
 };
 
-export const createDwollaCustomer = async (
-  newCustomer: NewDwollaCustomerParams
-) => {
+export const createDwollaCustomer = async (newCustomer: NewDwollaCustomerParams) => {
   try {
+
     return await dwollaClient
       .post("customers", newCustomer)
       .then((res) => res.headers.get("location"));
@@ -83,6 +82,7 @@ export const createTransfer = async ({
         value: amount,
       },
     };
+    
     return await dwollaClient
       .post("transfers", requestBody)
       .then((res) => res.headers.get("location"));

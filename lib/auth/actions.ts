@@ -9,7 +9,5 @@ export const isLogged = async() => {
         return loggedUser;
     } else {
         redirect("/sign-in");
-
-        return false;
     }
 }

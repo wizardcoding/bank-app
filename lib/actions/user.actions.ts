@@ -115,8 +115,8 @@ export const signUp = async ({password, ...userData}: SignUpParams) => {
 export const getLoggedInUser = async() => {
     try {
       const { account } = await createSessionClient();
-      const user = await account.get();
-      //const user = await getUserInfo({ userId: user.$id})
+      const userFetch = await account.get();
+      const user = await getUserInfo({ userId: userFetch.$id});
   
       return parseStringify(user);
     } catch (error) {
@@ -140,7 +140,6 @@ export const logOut = async() => {
 export const createLinkToken = async (user: User) => {
   const { firstName, lastName } = user;
   try {
-
     const tokenParams = {
       user: {
         client_user_id: user.$id
@@ -152,7 +151,6 @@ export const createLinkToken = async (user: User) => {
       client_id: PLAID_CLIENT_ID,
       secret: PLAID_SECRET,
     }
-
     const response = await PlaidClient.linkTokenCreate(tokenParams);
 
     return parseStringify({ linkToken: response.data.link_token })
