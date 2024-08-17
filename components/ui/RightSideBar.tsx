@@ -44,24 +44,34 @@ const RightSideBar = ({ user, banks }: RightSidebarProps) => {
               justify-center
               gap-5"
             >
-              <div className="relative z-10">
-                <BankCard
-                key={banks[0].$id}
-                account={banks[0]}
-                userName={fullName}
-                showBalance={false}
-              />
-              </div>
-              {banks[1] && (
-                <div className="absolute right-0 top-8 z-0 w-[90%]">
-                  <BankCard
-                    key={banks[1].$id}
-                    account={banks[1]}
-                    userName={fullName}
-                    showBalance={false}
-                  />
-                </div>
-              )}
+              {banks?.map((bank: any, index: number) => {
+                if(index > 1) {
+                  return;
+                }
+                if(index < 1) {
+                  return (
+                    <div className="relative z-10" key={'bank' + index}>
+                      <BankCard
+                        key={bank.$id}
+                        account={bank}
+                        userName={fullName}
+                        showBalance={false}
+                      />
+                    </div>
+                  )
+                } else {
+                  return(
+                    <div className={`absolute right-0 top-4 z-0 w-[90%]`} key={'bank' + index}>
+                      <BankCard
+                        key={bank.$id}
+                        account={bank}
+                        userName={fullName}
+                        showBalance={false}
+                      />
+                    </div>
+                  )
+                }
+              })}
             </div>
           )}
         </section>

@@ -9,15 +9,13 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
   const accounts = await getAccounts({userId: loggedUser?.$id});
   const fullName = `${loggedUser.firstName.toUpperCase()} ${loggedUser.lastName.toUpperCase()}`;
   const accountsData = accounts?.data;
-  const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
+  //const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
 
-  const getAccount = (appwriteItemId: string) => {
+  const getAccountFill = (appwriteItemId: string) => {
     return accountsData.filter((account: any) => {
       return account.appwriteItemId === appwriteItemId;
     })[0];
   }
-
-  console.log('account: ', getAccount(appwriteItemId));
 
   if(!accounts) {
     return;
@@ -44,7 +42,7 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
       <RightSideBar
         user={loggedUser}
         transactions={accounts?.transactions}
-        banks={accountsData?.slice(0, 2)}
+        banks={accountsData}
       />
     </section>
   )
