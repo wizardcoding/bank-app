@@ -10,7 +10,14 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
   const fullName = `${loggedUser.firstName.toUpperCase()} ${loggedUser.lastName.toUpperCase()}`;
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
-  const account = await getAccount({ appwriteItemId });
+
+  const getAccount = (appwriteItemId: string) => {
+    return accountsData.filter((account: any) => {
+      return account.appwriteItemId === appwriteItemId;
+    })[0];
+  }
+
+  console.log('account: ', getAccount(appwriteItemId));
 
   if(!accounts) {
     return;

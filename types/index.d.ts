@@ -267,6 +267,8 @@ declare interface getAccountProps {
 
 declare interface getInstitutionProps {
   institutionId: string;
+  client_id: string;
+  secret: string;
 }
 
 declare interface getTransactionsProps {
@@ -314,7 +316,7 @@ declare interface createBankAccountProps {
   accountId: string;
   bankId: string;
   fundingSourceUrl: string;
-  sharableId: string;
+  shareableId: string;
 }
 
 declare interface getBanksProps {

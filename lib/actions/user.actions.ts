@@ -1,4 +1,5 @@
 'use server';
+
 import { createSessionClient, createAdminClient, createSessionLogin } from "@/lib/server/appwrite";
 import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
@@ -151,6 +152,7 @@ export const createLinkToken = async (user: User) => {
       client_id: PLAID_CLIENT_ID,
       secret: PLAID_SECRET,
     }
+
     const response = await PlaidClient.linkTokenCreate(tokenParams);
 
     return parseStringify({ linkToken: response.data.link_token })
@@ -181,17 +183,31 @@ export const createBankAccount = async(bankAccountParams: createBankAccountProps
 
 export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenProps) => {
     const {publicToken, user} = publicTokenArgs;
+    
     try {
-        const response = await PlaidClient.itemPublicTokenExchange({public_token: publicToken});
+        const response = await PlaidClient.itemPublicTokenExchange({
+          public_token: publicToken,
+          client_id: PLAID_CLIENT_ID!,
+          secret: PLAID_SECRET!,
+        });
+
         const accessToken = response.data.access_token;
         const itemId = response.data.item_id;
-        const accountResponse = await PlaidClient.accountsGet({access_token: accessToken});
+
+        const accountResponse = await PlaidClient.accountsGet({
+          access_token: accessToken,
+          client_id: PLAID_CLIENT_ID!,
+          secret: PLAID_SECRET!,
+        });
+
         const accountData = accountResponse.data.accounts[0];
 
         const request: ProcessorTokenCreateRequest = {
           access_token: accessToken,
           account_id: accountData.account_id,
           processor: "dwolla" as ProcessorTokenCreateRequestProcessorEnum,
+          client_id: PLAID_CLIENT_ID!,
+          secret: PLAID_SECRET!,
         };
 
         const processorTokenResponse = await PlaidClient.processorTokenCreate(request);
@@ -213,7 +229,7 @@ export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenPro
           accountId: accountData.account_id,
           accessToken,
           fundingSourceUrl,
-          sharableId: encryptId(accountData.account_id),
+          shareableId: `${encryptId(accountData.account_id)}`,
         });
 
         revalidatePath("/");
@@ -222,7 +238,7 @@ export const exchangePublicToken = async(publicTokenArgs: exchangePublicTokenPro
           publicTokenExchange: "complete"
         });
     } catch (error) {
-        console.log('exchangePublicToken - error ', error);
+        console.log('exchangePublicToken - error ', parseStringify(error));
 
         return null;
     }

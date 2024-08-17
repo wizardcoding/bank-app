@@ -11,9 +11,13 @@ import {
 
 import { PlaidClient } from "@/lib/server/plaid"
 import { parseStringify } from "@/lib/utils";
-
-// import { getTransactionsByBankId } from "@/lib/transaction.actions";
+import { getTransactionsByBankId } from "@/lib/actions/transaction.actions";
 import { getBanks, getBank } from "@/lib/actions/user.actions";
+
+const {
+  PLAID_SECRET,
+  PLAID_CLIENT_ID,
+} = process.env;
 
 // Get multiple bank accounts
 export const getAccounts = async ({ userId }: getAccountsProps) => {
@@ -26,12 +30,16 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
         // get each account info from plaid
         const accountsResponse = await PlaidClient.accountsGet({
           access_token: bank.accessToken,
+          client_id: PLAID_CLIENT_ID!,
+          secret: PLAID_SECRET!,
         });
         const accountData = accountsResponse.data.accounts[0];
 
         // get institution info from plaid
         const institution = await getInstitution({
           institutionId: accountsResponse.data.item.institution_id!,
+          client_id: PLAID_CLIENT_ID!,
+          secret: PLAID_SECRET!,
         });
 
         const account = {
@@ -54,6 +62,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
 
     const totalBanks = accounts.length;
     const totalCurrentBalance = accounts.reduce((total: number, account: any) => {
+
       return total + account.currentBalance;
     }, 0);
 
@@ -72,6 +81,8 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     // get account info from plaid
     const accountsResponse = await PlaidClient.accountsGet({
       access_token: bank.accessToken,
+      client_id: PLAID_CLIENT_ID!,
+      secret: PLAID_SECRET!,
     });
     const accountData = accountsResponse.data.accounts[0];
 
@@ -95,6 +106,8 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     // get institution info from plaid
     const institution = await getInstitution({
       institutionId: accountsResponse.data.item.institution_id!,
+      client_id: PLAID_CLIENT_ID!,
+      secret: PLAID_SECRET!,
     });
 
     const transactions = await getTransactions({
@@ -136,6 +149,8 @@ export const getInstitution = async ({
     const institutionResponse = await PlaidClient.institutionsGetById({
       institution_id: institutionId,
       country_codes: ["US"] as CountryCode[],
+      client_id: PLAID_CLIENT_ID!,
+      secret: PLAID_SECRET!,
     });
 
     const intitution = institutionResponse.data.institution;
