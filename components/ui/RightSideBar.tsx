@@ -3,20 +3,21 @@ import Image from 'next/image'
 import BankCard from "@/components/ui/BankCard";
 
 const RightSideBar = ({ user, banks }: RightSidebarProps) => {
-  const{ email = '', name = '' } = user;
+  const{ email = '', firstName = '', lastName = '' } = user;
+  const fullName = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
   return (
     <aside className="right-sidebar">
         <section className="flex flex-col pb-8">
             <div className="profile-banner"/>
             <div className="profile">
               <div className="profile-img">
-                <span className="text-5xl font-bold text-blue-500">
-                  {name[0] || "X"}
+                <span className="text-4xl font-bold text-blue-500">
+                  {`${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}` || "X"}
                 </span>
               </div>
               <div className="profile-details">
                 <h1 className="profile-name">
-                  {name}
+                  {fullName}
                 </h1>
                 <p className="profile-email">{email}</p>
               </div>
@@ -47,7 +48,7 @@ const RightSideBar = ({ user, banks }: RightSidebarProps) => {
                 <BankCard
                 key={banks[0].$id}
                 account={banks[0]}
-                userName={name}
+                userName={fullName}
                 showBalance={false}
               />
               </div>
@@ -56,7 +57,7 @@ const RightSideBar = ({ user, banks }: RightSidebarProps) => {
                   <BankCard
                     key={banks[1].$id}
                     account={banks[1]}
-                    userName={name}
+                    userName={fullName}
                     showBalance={false}
                   />
                 </div>
