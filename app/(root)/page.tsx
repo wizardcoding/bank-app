@@ -2,14 +2,17 @@ import HeaderBox from "@/components/ui/HeaderBox"
 import RightSideBar from "@/components/ui/RightSideBar";
 import TotalBalanceBox from "@/components/ui/TotalBalanceBox"
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
+import RecentTransactions from '@/components/ui/RecentTransactions';
 import { isLogged } from "@/lib/auth/actions";
 
 const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
+  const currentPage = parseInt(page as string) || 1;
   const loggedUser = await isLogged();
   const accounts = await getAccounts({userId: loggedUser?.$id});
   const fullName = `${loggedUser.firstName.toUpperCase()} ${loggedUser.lastName.toUpperCase()}`;
   const accountsData = accounts?.data;
-  //const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
+  const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
+  const { totalCurrentBalance = 0, totalBanks = 0, transactions = [] } = accounts;
 
   const getAccountFill = (appwriteItemId: string) => {
     return accountsData.filter((account: any) => {
@@ -33,15 +36,19 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
           />
           <TotalBalanceBox
             accounts={accountsData}
-            totalBanks={accounts?.totalBanks}
-            totalCurrentBalance={accounts?.totalCurrentBalance}
+            totalBanks={totalBanks}
+            totalCurrentBalance={totalCurrentBalance}
           />
         </header>
-        RECENT transactions
+        <RecentTransactions
+          accounts={accounts}
+          transactions={transactions}
+          appwriteItemId={appwriteItemId} page={currentPage}
+        />
       </div>
       <RightSideBar
         user={loggedUser}
-        transactions={accounts?.transactions}
+        transactions={transactions}
         banks={accountsData}
       />
     </section>
