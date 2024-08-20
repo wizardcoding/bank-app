@@ -41,7 +41,7 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
           />
         </header>
         <RecentTransactions
-          accounts={accounts}
+          accounts={accounts?.data || []}
           transactions={transactions}
           appwriteItemId={appwriteItemId} page={currentPage}
         />

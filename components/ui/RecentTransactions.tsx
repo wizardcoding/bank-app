@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BankTabItem from "@/components/ui/BankTabItem";
 
 const RecentTransactions = (props: RecentTransactionsProps) => {
     const { accounts, transactions = [], appwriteItemId, page = 1 } = props;
@@ -15,7 +14,15 @@ const RecentTransactions = (props: RecentTransactionsProps) => {
                 View All
             </Link>
         </header>
-
+        <Tabs defaultValue={appwriteItemId} className="w-full">
+            <TabsList className="recent-transactions-tablist">
+               {accounts.map((account: Account) => (
+                <TabsTrigger key={account.id} value={account.appwriteItemId}>
+                    <BankTabItem appwriteItemId={appwriteItemId} account={account}/>
+                </TabsTrigger>
+               ))} 
+            </TabsList>
+        </Tabs>
     </section>
   )
 }
