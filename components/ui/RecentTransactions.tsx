@@ -2,34 +2,39 @@ import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BankTabItem from "@/components/ui/BankTabItem";
 import BankInfo from "@/components/ui/BankInfo";
+import TransactionsTable from "@/components/ui/TransactionsTable";
 
 const RecentTransactions = (props: RecentTransactionsProps) => {
     const { accounts, transactions = [], appwriteItemId, page = 1 } = props;
-    const contentUI = { TabsTriggerContent: [] as any[], tabsContentData: [] as any[] };
-
-    accounts.map((account: Account) => {
-        contentUI.TabsTriggerContent = [
-            ...contentUI.TabsTriggerContent, 
+    const contentUI = accounts.reduce((previousValue, currentValue) => {
+        previousValue.TabsTriggerContent = [
+            ...previousValue.TabsTriggerContent, 
             (
-                <TabsTrigger key={account.id} value={account.appwriteItemId}>
-                    <BankTabItem appwriteItemId={appwriteItemId} account={account}/>
+                <TabsTrigger key={currentValue.id} value={currentValue.appwriteItemId}>
+                    <BankTabItem appwriteItemId={appwriteItemId} account={currentValue}/>
                 </TabsTrigger>
             )
         ];
 
-        contentUI.tabsContentData = [
-            ...contentUI.tabsContentData,
+        previousValue.tabsContentData = [
+            ...previousValue.tabsContentData,
             (
                 <TabsContent 
-                    value={account.appwriteItemId} 
-                    key={account.id} 
+                    value={currentValue.appwriteItemId} 
+                    key={currentValue.id} 
                     className="space-y-4"
                 >
-                    <BankInfo account={account} appwriteItemId={appwriteItemId} type="full"/>
+                    <BankInfo account={currentValue} appwriteItemId={appwriteItemId} type="full"/>
+                    <TransactionsTable transactions={transactions}/>
                 </TabsContent>
             )
         ];
-    });
+
+        return previousValue;
+    }, {
+            TabsTriggerContent: [] as any[],
+            tabsContentData: [] as any[]
+        });
 
     const { TabsTriggerContent, tabsContentData } = contentUI;
 
