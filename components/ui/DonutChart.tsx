@@ -38,30 +38,6 @@ const DonutChart = (props: DoughnutChartProps) => {
     }] as any[]
   });
 
-  console.log('accoutData', accoutData);
-
-  // const data = {
-  //   labels: [
-  //     'Bank 1',
-  //     'Bank 2',
-  //     'Bank 3'
-  //   ],
-  //   datasets: [{
-  //     label: 'Banks',
-  //     data: [1234, 500, 340],
-  //     backgroundColor: [
-  //       '#0747B6',
-  //       '#2265D8',
-  //       '#2F91FA'
-  //     ]
-  //   }]
-  // };
-
-  // const config = {
-  //   type: 'doughnut',
-  //   data: data,
-  // };
-  
   return (
     <Doughnut data={accoutData} 
       options={{
