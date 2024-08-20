@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BankTabItem from "@/components/ui/BankTabItem";
+import BankInfo from "@/components/ui/BankInfo";
 
 const RecentTransactions = (props: RecentTransactionsProps) => {
     const { accounts, transactions = [], appwriteItemId, page = 1 } = props;
@@ -24,7 +25,7 @@ const RecentTransactions = (props: RecentTransactionsProps) => {
                     key={account.id} 
                     className="space-y-4"
                 >
-                    data
+                    <BankInfo account={account} appwriteItemId={appwriteItemId} type="full"/>
                 </TabsContent>
             )
         ];
