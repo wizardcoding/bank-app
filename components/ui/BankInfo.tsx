@@ -4,9 +4,9 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const BankInfo = (props: BankInfoProps) => {
-  const { account, appwriteItemId, type } = props;
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { account, appwriteItemId, type } = props;
   const colors = getAccountTypeColors(account?.type as AccountTypes);
   const { name, subtype, currentBalance } = account;
   const isActive = appwriteItemId === account?.appwriteItemId;
