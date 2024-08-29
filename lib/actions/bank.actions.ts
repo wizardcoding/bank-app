@@ -42,6 +42,23 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           secret: PLAID_SECRET!,
         });
 
+        // get transfer transactions from appwrite
+        const transferTransactionsData = await getTransactionsByBankId({
+          bankId: bank.$id,
+        });
+
+        const transferTransactions = transferTransactionsData.documents.map(
+          (transferData: Transaction) => ({
+            id: transferData.$id,
+            name: transferData.name!,
+            amount: transferData.amount!,
+            date: transferData.$createdAt,
+            paymentChannel: transferData.channel,
+            category: transferData.category,
+            type: transferData.senderBankId === bank.$id ? "debit" : "credit",
+          })
+        );
+
         const account = {
           id: accountData.account_id,
           availableBalance: accountData.balances.available!,
@@ -55,6 +72,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           appwriteItemId: bank.$id,
           sharaebleId: bank.sharableId,
           at: bank.accessToken,
+          transactions: transferTransactions,
         };
 
         return account;
@@ -75,15 +93,17 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
 
 // Get one bank account
 export const getAccount = async (params: any) => {
-  const { id, at, appwriteItemId } = params;
-
+  const { appwriteItemId } = params;
+  
   try {
     // get bank from db
-    //const bank = await getBank({ documentId: appwriteItemId });
+    const bank = await getBank({ documentId: appwriteItemId });
+    
+    const { $id, access_token } = bank;
 
     // get account info from plaid
     const accountsResponse = await PlaidClient.accountsGet({
-      access_token: at,
+      access_token: access_token,
       client_id: PLAID_CLIENT_ID!,
       secret: PLAID_SECRET!,
     });
@@ -91,7 +111,7 @@ export const getAccount = async (params: any) => {
 
     // get transfer transactions from appwrite
     const transferTransactionsData = await getTransactionsByBankId({
-      bankId: id,
+      bankId: $id,
     });
 
     const transferTransactions = transferTransactionsData.documents.map(
@@ -102,7 +122,7 @@ export const getAccount = async (params: any) => {
         date: transferData.$createdAt,
         paymentChannel: transferData.channel,
         category: transferData.category,
-        type: transferData.senderBankId === id ? "debit" : "credit",
+        type: transferData.senderBankId === $id ? "debit" : "credit",
       })
     );
 
@@ -114,7 +134,7 @@ export const getAccount = async (params: any) => {
     });
 
     const transactions = await getTransactions({
-      accessToken: at,
+      accessToken: access_token,
     });
 
     const account = {
@@ -127,7 +147,7 @@ export const getAccount = async (params: any) => {
       mask: accountData.mask!,
       type: accountData.type as string,
       subtype: accountData.subtype! as string,
-      appwriteItemId: id,
+      appwriteItemId: $id,
     };
 
     // sort transactions by date such that the most recent transaction is first

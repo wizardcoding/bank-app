@@ -9,10 +9,12 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
   const currentPage = parseInt(page as string) || 1;
   const loggedUser = await isLogged();
   const accounts = await getAccounts({userId: loggedUser?.$id});
+  // const accountSingle = getAccount(accounts.data[0].appwriteItemId)
   const fullName = `${loggedUser.firstName.toUpperCase()} ${loggedUser.lastName.toUpperCase()}`;
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
-  const { totalCurrentBalance = 0, totalBanks = 0, transactions = [] } = accounts;
+  const { totalCurrentBalance, totalBanks } = accounts;
+  const { transactions } = accounts.data[0];
 
   const getAccountFill = (appwriteItemId: string) => {
     return accountsData.filter((account: any) => {
@@ -42,7 +44,6 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
         </header>
         <RecentTransactions
           accounts={accounts?.data || []}
-          transactions={transactions}
           appwriteItemId={appwriteItemId} page={currentPage}
         />
       </div>
