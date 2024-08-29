@@ -61,6 +61,7 @@ declare type Account = {
   subtype: string;
   appwriteItemId: string;
   sharableId: string;
+  transactions: Array;
 };
 
 declare type Transaction = {
@@ -226,7 +227,7 @@ declare interface SiderbarProps {
 
 declare interface RecentTransactionsProps {
   accounts: Account[];
-  transactions: Transaction[];
+  // transactions: Transaction[];
   appwriteItemId: string;
   page: number;
 }
