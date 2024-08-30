@@ -6,6 +6,7 @@ import Image from "next/image";
 import HomeLink from "@/components/ui/HomeLink";
 import Footer from "@/components/ui/Footer";
 import { useEffect, useState } from "react";
+import PlaidLink from "@/components/ui/PlaidLink";
 
 const SideBar = (props: SiderbarProps) => {
     const { user } = props;
@@ -30,6 +31,7 @@ const SideBar = (props: SiderbarProps) => {
         <section className="sidebar">
             <nav className="flex flex-col gap-4">
                 <HomeLink/>
+                <PlaidLink user={user}/>
                 <Navigation/>
             </nav>
                 <Footer user={user} type={type} />

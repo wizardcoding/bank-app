@@ -5,13 +5,13 @@ import BankInfo from "@/components/ui/BankInfo";
 import TransactionsTable from "@/components/ui/TransactionsTable";
 
 const RecentTransactions = (props: RecentTransactionsProps) => {
-    const { accounts, appwriteItemId, page = 1 } = props;
+    const { accounts, appwriteItemId, transactions = [], page = 1 } = props;
     const contentUI = accounts.reduce((previousValue, currentValue) => {
         previousValue.TabsTriggerContent = [
             ...previousValue.TabsTriggerContent, 
             (
                 <TabsTrigger key={currentValue.id} value={currentValue.appwriteItemId}>
-                    <BankTabItem appwriteItemId={appwriteItemId} account={currentValue}/>
+                    <BankTabItem appwriteItemId={currentValue.appwriteItemId} account={currentValue}/>
                 </TabsTrigger>
             )
         ];
@@ -24,8 +24,8 @@ const RecentTransactions = (props: RecentTransactionsProps) => {
                     key={currentValue.id} 
                     className="space-y-4"
                 >
-                    <BankInfo account={currentValue} appwriteItemId={appwriteItemId} type="full"/>
-                    <TransactionsTable transactions={currentValue.transactions}/>
+                    <BankInfo account={currentValue} appwriteItemId={currentValue.appwriteItemId} type="full"/>
+                    <TransactionsTable transactions={transactions}/>
                 </TabsContent>
             )
         ];

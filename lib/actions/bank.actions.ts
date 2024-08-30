@@ -24,7 +24,6 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
   try {
     // get banks from db
     const banks = await getBanks({ userId });
-
     const accounts = await Promise.all(
       banks?.map(async (bank: Bank, index: number) => {
         // get each account info from plaid
@@ -33,7 +32,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           client_id: PLAID_CLIENT_ID!,
           secret: PLAID_SECRET!,
         });
-        const accountData = accountsResponse.data.accounts[index];
+        const accountData = accountsResponse.data.accounts.pop()!;
 
         // get institution info from plaid
         const institution = await getInstitution({
@@ -98,22 +97,23 @@ export const getAccount = async (params: any) => {
   try {
     // get bank from db
     const bank = await getBank({ documentId: appwriteItemId });
-    
-    const { $id, access_token } = bank;
 
+    
+    const { $id, accessToken } = bank;
+    
     // get account info from plaid
     const accountsResponse = await PlaidClient.accountsGet({
-      access_token: access_token,
+      access_token: accessToken,
       client_id: PLAID_CLIENT_ID!,
       secret: PLAID_SECRET!,
     });
-    const accountData = accountsResponse.data.accounts[0];
-
+    const accountData = accountsResponse.data.accounts.pop()!;
+    
     // get transfer transactions from appwrite
     const transferTransactionsData = await getTransactionsByBankId({
       bankId: $id,
     });
-
+    
     const transferTransactions = transferTransactionsData.documents.map(
       (transferData: Transaction) => ({
         id: transferData.$id,
@@ -125,18 +125,18 @@ export const getAccount = async (params: any) => {
         type: transferData.senderBankId === $id ? "debit" : "credit",
       })
     );
-
+    
     // get institution info from plaid
     const institution = await getInstitution({
       institutionId: accountsResponse.data.item.institution_id!,
       client_id: PLAID_CLIENT_ID!,
       secret: PLAID_SECRET!,
     });
-
+    
     const transactions = await getTransactions({
-      accessToken: access_token,
+      accessToken: accessToken,
     });
-
+    
     const account = {
       id: accountData.account_id,
       availableBalance: accountData.balances.available!,
@@ -196,6 +196,8 @@ export const getTransactions = async ({
     while (hasMore) {
       const response = await PlaidClient.transactionsSync({
         access_token: accessToken,
+        client_id: PLAID_CLIENT_ID!,
+        secret: PLAID_SECRET!,
       });
 
       const data = response.data;
