@@ -20,7 +20,7 @@ const Home = async ({ searchParams: {id, page} }: SearchParamProps) => {
 
   const account = await getAccount({appwriteItemId});
 
-  const { transactions, data } = account;
+  const { transactions } = account;
 
   const getAccountFill = (appwriteItemId: string) => {
     return accountsData.filter((account: any) => {

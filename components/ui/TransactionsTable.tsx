@@ -31,7 +31,6 @@ const CategoryPill = (args: CategoryBadgeProps) =>  {
 
 const TransactionsTable = (props: TransactionTableProps) => {
     const { transactions = [] } = props;
-    console.log('transactions: ', transactions);
 
     // data structure 1:
 

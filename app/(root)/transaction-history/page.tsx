@@ -1,6 +1,8 @@
 import HeaderBox from "@/components/ui/HeaderBox"
 import { isLogged } from "@/lib/auth/actions";
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
+import { formatAmount } from "@/lib/utils";
+import TransactionsTable from "@/components/ui/TransactionsTable";
 
 const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps) => {
   const currentPage = parseInt(page as string) || 1;
@@ -13,7 +15,9 @@ const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
   const account = await getAccount({appwriteItemId});
+  const { transactions } = account;
 
+  const {name = '', officialName = '', mask = '', currentBalance = 0} = account?.data;
 
   return (
     <div className="transactions">
@@ -23,12 +27,22 @@ const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps
       <div className="space-y-6">
         <div className="transactions-account">
           <div className="flex flex-col gap-2">
-            <h2 className="text-18 font-bold text-white">{account?.data.name}</h2>
+            <h2 className="text-18 font-bold text-white">{name}</h2>
             <p className="text-14 text-blue-25">
-              {account.fullName}
+              {officialName}
+            </p>
+            <p className="text-14 font-semibold tracking-[1.1px] text-white">
+              **** **** **** {mask}
             </p>
           </div>
+          <div className="transactions-account-balance">
+            <p className="text-14">Current Balance</p>
+            <p className="text-24 text-center font-bold">{formatAmount(currentBalance)}</p>
+          </div>
         </div>
+       <section className="flex w-full flex-col gap-6">
+        <TransactionsTable transactions={transactions}/>  
+      </section> 
       </div>
     </div>
   )
