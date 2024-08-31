@@ -9,16 +9,18 @@ const BankCard = (props: CreditCardProps) => {
         showBalance = true
     } = props;
 
+    const { name = '', currentBalance = 0, mask = ''} = account;
+
     return (
         <div className="flex flex-col">
             <Link href="/" className="bank-card">
                 <div className="bank-card_content">
                     <div>
                         <h1 className="text-16 font-semibold text-white">
-                            {account.name || `* ${userName} *`}
+                            {name || `* ${userName} *`}
                         </h1>
                         <p className="font-ibm-plex-serif font-back text-white">
-                            {formatAmount(account.currentBalance)}
+                            {showBalance && formatAmount(currentBalance)}
                         </p>
                     </div>
                     <article className="flex flex-col gap-2">
@@ -31,7 +33,7 @@ const BankCard = (props: CreditCardProps) => {
                             </h2>
                         </div>
                         <p className="text-14 font-semibold tracking-[1.1px] text-white">
-                        ⋆⋆⋆⋆ ⋆⋆⋆⋆ ⋆⋆⋆⋆<span className="text-16">{account.mask || 6666}</span>
+                        ⋆⋆⋆⋆ ⋆⋆⋆⋆ ⋆⋆⋆⋆ <span className="text-16">{mask || 6666}</span>
                         </p>
                     </article>
                 </div>
