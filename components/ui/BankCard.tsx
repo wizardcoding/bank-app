@@ -1,6 +1,7 @@
 import { formatAmount } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import Copy from "@/components/ui/Copy";
 
 const BankCard = (props: CreditCardProps) => {
     const {
@@ -8,17 +9,18 @@ const BankCard = (props: CreditCardProps) => {
         userName,
         showBalance = true
     } = props;
+    const {name = '', currentBalance = 0, mask = '', appwriteItemId = '', shareableId = ''} = account;
 
     return (
         <div className="flex flex-col">
-            <Link href="/" className="bank-card">
+            <Link href={`/transaction-history/?id=${appwriteItemId}`} className="bank-card">
                 <div className="bank-card_content">
                     <div>
                         <h1 className="text-16 font-semibold text-white">
-                            {account.name || `* ${userName} *`}
+                            {name || `* ${userName} *`}
                         </h1>
                         <p className="font-ibm-plex-serif font-back text-white">
-                            {formatAmount(account.currentBalance)}
+                            {showBalance && formatAmount(currentBalance)}
                         </p>
                     </div>
                     <article className="flex flex-col gap-2">
@@ -31,7 +33,7 @@ const BankCard = (props: CreditCardProps) => {
                             </h2>
                         </div>
                         <p className="text-14 font-semibold tracking-[1.1px] text-white">
-                        ⋆⋆⋆⋆ ⋆⋆⋆⋆ ⋆⋆⋆⋆<span className="text-16">{account.mask || 6666}</span>
+                        ⋆⋆⋆⋆ ⋆⋆⋆⋆ ⋆⋆⋆⋆ <span className="text-16">{mask || 6666}</span>
                         </p>
                     </article>
                 </div>
@@ -58,7 +60,7 @@ const BankCard = (props: CreditCardProps) => {
                     className="absolute top-0 left-0"
                 />
             </Link>
-            {/* {copy} */}
+            {showBalance && <Copy title={`${shareableId}`}/>}
         </div>
     )
 }

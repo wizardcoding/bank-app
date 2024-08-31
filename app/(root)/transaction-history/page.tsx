@@ -15,7 +15,7 @@ const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
   const account = await getAccount({appwriteItemId});
-  const { transactions } = account;
+  const { transactions = [] } = account;
 
   const {name = '', officialName = '', mask = '', currentBalance = 0} = account?.data;
 
