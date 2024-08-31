@@ -42,7 +42,6 @@ const Navigation = () => {
                     </Link>
                 )
             })}
-            user
         </>
     )
 }

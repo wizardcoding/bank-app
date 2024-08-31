@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState, useEffect } from "react";
 import { PlaidLinkOptions, PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
 import { createLinkToken, exchangePublicToken } from "@/lib/actions/user.actions";
+import Image from "next/image";
 
 const PlaidLink = (props: PlaidLinkProps) => {
     const { user, variant} = props;
@@ -33,25 +34,35 @@ const PlaidLink = (props: PlaidLinkProps) => {
         onSuccess
     };
 
+    const ButtonContent = () => (
+        <>
+            <Image src="/icons/connect-bank.svg" alt="connect bank" width={24} height={24}/>
+            <p className="text-[16px] font-semibold text-black-2">
+                Connect Bank
+            </p>
+            <p></p>
+        </>
+    )
+
     const { open, ready } = usePlaidLink(config);
 
     const getButton = () => {
         if(variant === 'primary') {
             return (
                 <Button onClick={() => open()} disabled={!ready} className="plaidlink-primary">
-                    Connect Bank
+                    <ButtonContent/>
                 </Button>
             );
         } else if(variant === 'ghost') {
             return (
-                <Button className="plaidlink-ghost">
-                    Connect Bank
+                <Button variant="ghost" onClick={() => open()} className="plaidlink-ghost">
+                    <ButtonContent/>
                 </Button>
             );
         } else {
             return (
-                <Button>
-                    Connect Bank
+                <Button onClick={() => open()} className="plaidlink-default">
+                    <ButtonContent/>
                 </Button>
             );
         }
