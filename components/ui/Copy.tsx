@@ -6,12 +6,15 @@ const Copy = ({ title }: { title: string }) => {
   const [hasCopied, setHasCopied] = useState(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(title);
-    setHasCopied(true);
-
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
+    if(!hasCopied) {
+        navigator.clipboard.writeText(title);
+        setHasCopied(true);
+    } else {
+        setHasCopied(false);
+    }
+    // setTimeout(() => {
+    //   setHasCopied(false);
+    // }, 10000);
   };
 
   return (
