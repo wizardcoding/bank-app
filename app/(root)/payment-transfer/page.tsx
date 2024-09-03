@@ -6,7 +6,7 @@ const PaymentTransfer = () => {
     <section className="payment-transfer">
       <HeaderBox title="Payment Transfer" subtext="Please provide any notes related to the payment"/>
       <section className="size-full pt-5">
-        <PaymentTransferForm/>
+        {/* <PaymentTransferForm/> */}
       </section>
     </section>
   )

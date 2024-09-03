@@ -250,5 +250,12 @@ export const authFormSchema = (type: string) => z.object({
   }).max(20, {
       message: "Password Must have a maximum of 20 characters"
   }),
-
 });
+
+export const PaymentTransferFormSchema = z.object({
+  email: z.string().email({message: "Invalid email address."}),
+  name: z.string().min(4, "transfer note too short."),
+  amount: z.string().min(4, "Amount too short."),
+  senderBank: z.string().min(8, "Please select a valid bank account."),
+  sharableId: z.string().min(8, "Please select a valid sharable Id."),
+})

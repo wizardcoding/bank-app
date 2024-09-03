@@ -12,7 +12,7 @@ import {
     SelectTrigger,
   } from "@/components/ui/select";
 
-const BankDropdown = (props: BankDropdownProps) => {
+export const BankDropdown = (props: BankDropdownProps) => {
     const { accounts = [], setValue = '', otherStyles = '' } = props;
     const [selected, setSelected] = useState(accounts[0])
     const searchParams = useSearchParams();
@@ -80,5 +80,3 @@ const BankDropdown = (props: BankDropdownProps) => {
     </Select>
   );
 }
-
-export default BankDropdown
