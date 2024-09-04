@@ -102,7 +102,7 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
           )}
         />
 
-<FormField
+        <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
