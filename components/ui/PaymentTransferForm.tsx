@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { createTransfer } from "@/lib/server/dwolla.actions";
 import { createTransaction } from "@/lib/actions/transaction.actions";
@@ -10,7 +10,7 @@ import { getBank, getBankByAccountId } from "@/lib/actions/user.actions";
 import { decryptId, PaymentTransferFormSchema } from "@/lib/utils";
 import { BankDropdown } from "@/components/ui/BankDropdown";
 import { useRouter } from "next/navigation";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Form} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -73,7 +73,7 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submit)} className="flex flex-col">
-        <FormField
+      <FormField
           control={form.control}
           name="senderBank"
           render={() => (
@@ -84,7 +84,7 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
                     Select Source Bank
                   </FormLabel>
                   <FormDescription className="text-12 font-normal text-gray-600">
-                    Select the bank account you want to transfer funds from.
+                    Select the bank account you want to transfer funds from
                   </FormDescription>
                 </div>
                 <div className="flex w-full flex-col">
@@ -102,11 +102,34 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
           )}
         />
 
-        <PaymentFormInput
+<FormField
           control={form.control}
           name="name"
-          formLabel={"Transfer Note (Optional)"}
-          formControlPlaceHolder="Write a short note here"
+          render={({ field }) => (
+            <FormItem className="border-t border-gray-200">
+              <div className="payment-transfer_form-item pb-6 pt-5">
+                <div className="payment-transfer_form-content">
+                  <FormLabel className="text-14 font-medium text-gray-700">
+                    Transfer Note (Optional)
+                  </FormLabel>
+                  <FormDescription className="text-12 font-normal text-gray-600">
+                    Please provide any additional information or instructions
+                    related to the transfer
+                  </FormDescription>
+                </div>
+                <div className="flex w-full flex-col">
+                  <FormControl>
+                    <Textarea
+                      placeholder="Write a short note here"
+                      className="input-class"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-12 text-red-500" />
+                </div>
+              </div>
+            </FormItem>
+          )}
         />
 
         <div className="payment-transfer_form-details">
@@ -121,22 +144,22 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
         <PaymentFormInput
           control={form.control}
           name="email"
-          formLabel={"Recipient&apos;s Email Address"}
+          formLabel="Recipient&apos;s Email Address"
           formControlPlaceHolder="ex: john@gmail.com"
         />
 
         <PaymentFormInput
           control={form.control}
           name="sharableId"
-          formLabel={"Receiver&apos;s Plaid Sharable Id"}
-          formControlPlaceHolder="ex: 5.00"
+          formLabel="Receiver&apos;s Plaid Sharable Id"
+          formControlPlaceHolder="Enter the public account number"
         />
 
         <PaymentFormInput
           control={form.control}
           name="amount"
           formLabel="Amount"
-          formControlPlaceHolder="Enter the public account number"
+          formControlPlaceHolder="ex: 5.00"
         />
 
         <div className="payment-transfer_btn-box">
