@@ -14,6 +14,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import PaymentFormInput from "@/components/ui/PaymentFormInput";
 
 
 const PaymentTransferForm = (props: PaymentTransferFormProps) => {
@@ -30,6 +31,7 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
         sharableId: "",
       },
     });
+    
     const submit = async(data: z.infer<typeof PaymentTransferFormSchema>) => {
       setIsLoading(true);
       try {
@@ -100,33 +102,11 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
           )}
         />
 
-        <FormField
+        <PaymentFormInput
           control={form.control}
           name="name"
-          render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
-              <div className="payment-transfer_form-item pb-6 pt-5">
-                <div className="payment-transfer_form-content">
-                  <FormLabel className="text-14 font-medium text-gray-700">
-                    Transfer Note (Optional)
-                  </FormLabel>
-                  <FormDescription className="text-12 fornt-normal text-gray-600">
-                    Please Provide any aditional information or instructions
-                  </FormDescription>
-                  <div className="flex w-full flex-col">
-                    <FormControl>
-                      <Textarea
-                        placeholder="Write a short note here"
-                        className="input-class"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-12 text-red-500"/>
-                  </div>
-                </div>
-              </div>
-            </FormItem>
-          )}
+          formLabel={"Transfer Note (Optional)"}
+          formControlPlaceHolder="Write a short note here"
         />
 
         <div className="payment-transfer_form-details">
@@ -138,76 +118,25 @@ const PaymentTransferForm = (props: PaymentTransferFormProps) => {
           </p>
         </div>
 
-        <FormField
+        <PaymentFormInput
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
-              <div className="payment_transfer_form-item py-5">
-                <FormLabel className="text-14 w-full max-w-[280px] font-medium text-gray-700">
-                  Recipient&apos;s Email Address
-                </FormLabel>
-                <div className="flex w-full flex-col">
-                  <FormControl>
-                    <Input
-                      placeholder="ex: john@gmail.com"
-                      className="input-class"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-12 text-red-500"/>
-                </div>
-              </div>
-            </FormItem>
-          )}
+          formLabel={"Recipient&apos;s Email Address"}
+          formControlPlaceHolder="ex: john@gmail.com"
         />
 
-        <FormField
+        <PaymentFormInput
           control={form.control}
           name="sharableId"
-          render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
-              <div className="payment_transfer_form-item py-5">
-                <FormLabel className="text-14 w-full max-w-[280px] font-medium text-gray-700">
-                  Receiver&apos;s Plaid Sharable Id
-                </FormLabel>
-                <div className="flex w-full flex-col">
-                  <FormControl>
-                    <Input
-                      placeholder="ex: 5.00"
-                      className="input-class"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-12 text-red-500"/>
-                </div>
-              </div>
-            </FormItem>
-          )}
+          formLabel={"Receiver&apos;s Plaid Sharable Id"}
+          formControlPlaceHolder="ex: 5.00"
         />
 
-        <FormField
+        <PaymentFormInput
           control={form.control}
           name="amount"
-          render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
-              <div className="payment_transfer_form-item py-5">
-                <FormLabel className="text-14 w-full max-w-[280px] font-medium text-gray-700">
-                  Amount
-                </FormLabel>
-                <div className="flex w-full flex-col">
-                  <FormControl>
-                    <Input
-                      placeholder="Enter the public account number"
-                      className="input-class"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-12 text-red-500"/>
-                </div>
-              </div>
-            </FormItem>
-          )}
+          formLabel="Amount"
+          formControlPlaceHolder="Enter the public account number"
         />
 
         <div className="payment-transfer_btn-box">
