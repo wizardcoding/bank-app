@@ -26,11 +26,14 @@ export const createTransaction = async (transaction: CreateTransactionProps) => 
 
     return parseStringify(newTransaction);
   } catch (error) {
-    console.log(error);
+    console.log('createTransaction - error: ', error);
+    
+    return null;
   }
 }
 
-export const getTransactionsByBankId = async ({bankId}: getTransactionsByBankIdProps) => {
+export const getTransactionsByBankId = async (args: getTransactionsByBankIdProps) => {
+  const { bankId } = args;
   try {
     const { database } = await createAdminClient();
 

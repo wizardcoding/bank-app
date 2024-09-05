@@ -13,7 +13,7 @@ export default async function RootLayout({
   return (
     <main className="flex h-screen w-full font-inter">
         <SideBar user={loggedUser} />
-        <div className="flex size-ful flex-col">
+        <div className="flex size-full flex-col">
           <div className="root-layout">
             <Image alt="Menu Icon" src="/icons/logo.svg" width={30} height={30}/>
             <div>

@@ -1,6 +1,6 @@
 import AuthForm from "@/components/ui/AuthForm"
 
-const SignIn = async () => {
+const SignIn = () => {
 
     return(
         <section>
