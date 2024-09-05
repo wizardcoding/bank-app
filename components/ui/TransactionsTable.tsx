@@ -74,10 +74,12 @@ const TransactionsTable = (props: TransactionTableProps) => {
   </TableHeader>
   <TableBody>
     {transactions.map((transaction: Transaction) => {
-      const status = getTransactionStatus(new Date(transaction.date));
+      const dateFormat = transaction.date.split('-');
+      console.log(`${dateFormat[0]}-${dateFormat[1]}-${dateFormat[2].substring(0, 2)}`);
+      const status = getTransactionStatus(new Date(`${dateFormat[0]}-${dateFormat[1]}-${dateFormat[2].substring(0, 2)}`));
       const amount = formatAmount(transaction.amount);
-      const isDebit = transaction.type === 'in store' || transaction.type === 'other';
-      const isCredit = transaction.type === 'online';
+      const isDebit = transaction.type === 'in store' || transaction.type === 'debit';
+      const isCredit = transaction.type === 'online' || transaction.type === 'other' || transaction.type === 'credit';
 
       return (
         <TableRow key={transaction.id} className={`${isDebit || amount[0] === '-' ? 'bg-[#FFFBFA]' : 'bg-[#F6FEF9]'} !over:bg-none !border-b-DEFAULT`}>
