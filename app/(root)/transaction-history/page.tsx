@@ -3,6 +3,8 @@ import { isLogged } from "@/lib/auth/actions";
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
 import { formatAmount } from "@/lib/utils";
 import TransactionsTable from "@/components/ui/TransactionsTable";
+import { getPaginationContent } from "@/lib/utils";
+import Pagination from "@/components/ui/Pagination";
 
 const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps) => {
   const currentPage = parseInt(page as string) || 1;
@@ -16,6 +18,8 @@ const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
   const account = await getAccount({appwriteItemId});
   const { transactions = [] } = account;
+  const { totalPages, currentTransactions } = getPaginationContent(transactions, currentPage);
+
 
   const {name = '', officialName = '', mask = '', currentBalance = 0} = account?.data;
 
@@ -41,7 +45,12 @@ const TransactionHistory = async ({searchParams: { id, page }}: SearchParamProps
           </div>
         </div>
        <section className="flex w-full flex-col gap-6">
-        <TransactionsTable transactions={transactions}/>  
+        <TransactionsTable transactions={currentTransactions}/>
+        {totalPages > 1 && (
+            <div className="my-4 w-full">
+                <Pagination totalPages={totalPages} page={currentPage} />
+            </div>
+        )}
       </section> 
       </div>
     </div>

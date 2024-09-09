@@ -3,15 +3,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BankTabItem from "@/components/ui/BankTabItem";
 import BankInfo from "@/components/ui/BankInfo";
 import TransactionsTable from "@/components/ui/TransactionsTable";
+import Pagination from "@/components/ui/Pagination";
+import { getPaginationContent } from "@/lib/utils";
+
 
 const RecentTransactions = (props: RecentTransactionsProps) => {
     const { accounts, appwriteItemId, transactions = [], page = 1 } = props;
+    const { totalPages, currentTransactions } = getPaginationContent(transactions, page);
     const contentUI = accounts.reduce((previousValue, currentValue) => {
         previousValue.TabsTriggerContent = [
             ...previousValue.TabsTriggerContent, 
             (
                 <TabsTrigger key={currentValue.id} value={currentValue.appwriteItemId}>
-                    <BankTabItem appwriteItemId={currentValue.appwriteItemId} account={currentValue}/>
+                    <BankTabItem appwriteItemId={currentValue.appwriteItemId} account={currentValue} />
                 </TabsTrigger>
             )
         ];
@@ -24,8 +28,13 @@ const RecentTransactions = (props: RecentTransactionsProps) => {
                     key={currentValue.id} 
                     className="space-y-4"
                 >
-                    <BankInfo account={currentValue} appwriteItemId={currentValue.appwriteItemId} type="full"/>
-                    <TransactionsTable transactions={transactions}/>
+                    <BankInfo account={currentValue} appwriteItemId={currentValue.appwriteItemId} type="full" />
+                    <TransactionsTable transactions={currentTransactions} />
+                    {totalPages > 1 && (
+                        <div className="my-4 w-full">
+                            <Pagination totalPages={totalPages} page={page} />
+                        </div>
+                    )}
                 </TabsContent>
             )
         ];
