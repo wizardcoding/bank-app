@@ -2,7 +2,6 @@ import HeaderBox from "@/components/ui/HeaderBox"
 import { isLogged } from "@/lib/auth/actions";
 import { getAccounts } from "@/lib/actions/bank.actions";
 import BankCard from "@/components/ui/BankCard";
-import { parseStringify } from "@/lib/utils";
 
 const MyBanks = async () => {
   const loggedUser = await isLogged();
