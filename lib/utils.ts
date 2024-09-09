@@ -260,8 +260,8 @@ export const PaymentTransferFormSchema = z.object({
   sharableId: z.string().min(8, "Please select a valid sharable Id."),
 })
 
-export const getPaginationContent = (transactions: any, page: number) => {
-  const { TRANSACTIONS_TABLE_ROWS_PER_PAGE } = process.env;
+export const getPaginationContent = (transactions: any[], page: number) => {
+    const { TRANSACTIONS_TABLE_ROWS_PER_PAGE } = process.env;
     const rowsPerPage = parseInt(TRANSACTIONS_TABLE_ROWS_PER_PAGE!)
     const totalPages = Math.ceil(transactions.length / rowsPerPage);
     const indexOfLastTransaction = page * rowsPerPage;
