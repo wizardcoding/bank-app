@@ -2,9 +2,12 @@ import HeaderBox from "@/components/ui/HeaderBox"
 import { isLogged } from "@/lib/auth/actions";
 import { getAccounts } from "@/lib/actions/bank.actions";
 import BankCard from "@/components/ui/BankCard";
+import { parseStringify } from "@/lib/utils";
 
 const MyBanks = async () => {
   const loggedUser = await isLogged();
+  const{ firstName = '', lastName = '' } = loggedUser;
+  const fullName = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
   const accounts = await getAccounts({userId: loggedUser?.$id});
   if(!accounts) {
     return;
@@ -17,7 +20,7 @@ const MyBanks = async () => {
         <BankCard
           key={'account-' + account.id} 
           account={account}
-          userName={account.name}
+          userName={fullName}
         />
       )
     });
