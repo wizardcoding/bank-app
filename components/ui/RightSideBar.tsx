@@ -1,10 +1,14 @@
 import Link from "next/link";
 import Image from 'next/image'
 import BankCard from "@/components/ui/BankCard";
+import Category from "@/components/ui/Category";
+import { countTransactionCategories } from "@/lib/utils";
 
-const RightSideBar = ({ user, banks }: RightSidebarProps) => {
+const RightSideBar = (props: RightSidebarProps) => {
+  const { user, banks, transactions } = props;
   const{ email = '', firstName = '', lastName = '' } = user;
   const fullName = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
+  const categories: CategoryCount[] = countTransactionCategories(transactions)
   return (
     <aside className="right-sidebar">
         <section className="flex flex-col pb-8">
@@ -74,6 +78,14 @@ const RightSideBar = ({ user, banks }: RightSidebarProps) => {
               })}
             </div>
           )}
+          <div className="mt-10 flex flex-1 flex-col gap-6">
+            <h2 className="header-2">Top Categories</h2>
+            <div className="space-y-5">
+              {categories.map((category, index) => {
+                return(<Category key={category.name} category={category} />)
+              })}
+            </div>
+          </div>
         </section>
     </aside>
   )

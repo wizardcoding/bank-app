@@ -13,9 +13,11 @@ const BankTabItem = (props: BankTabItemProps) => {
         const newUrl = formUrlQuery({
             params: searchParams.toString(),
             key: 'id',
-            value: accountAppwriteItemId
+            value: accountAppwriteItemId,
         });
-        router.push(newUrl, { scroll: false });
+        
+        router.push(`/?id=${appwriteItemId}`, { scroll: false });
+        
     };
 
   return (
@@ -24,7 +26,7 @@ const BankTabItem = (props: BankTabItemProps) => {
         className={cn(`banktab-item`, {" border-blue-600": isActive,})}
     >
         <p
-            className={cn(`text-16 line-clamp-1 flex-1 font-medium text-gray-500`, {" text-blue-600": isActive,})}
+            className={cn(`text-16 line-clamp-1 flex-1 font-medium text-gray-500`, {" text-blue-800": isActive,})}
         >
             {account.name}
         </p>

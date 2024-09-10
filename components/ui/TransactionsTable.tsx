@@ -32,34 +32,6 @@ const CategoryPill = (args: CategoryBadgeProps) =>  {
 const TransactionsTable = (props: TransactionTableProps) => {
     const { transactions = [] } = props;
 
-    // data structure 1:
-
-    // id: '1jzqm6Z96zsWGPoMp9l7tXdywwqoxacpdGgde',
-    // name: 'CREDIT CARD 3333 PAYMENT *//',
-    // paymentChannel: 'other',
-    // type: 'other',
-    // accountId: 'mpmGbMy8MmHjG56xd8V6CGB4RVlzoVSgwwJDw',
-    // amount: 25,
-    // pending: false,
-    // category: 'Payment',
-    // date: '2024-06-23',
-    // image: null
-
-    // data structure 2: 
-
-    // {
-    //   id: '7MzG1gl7agfbZZGZEX4gT9w4yG9xgAfdBR3Gd',
-    //   name: 'SparkFun',
-    //   paymentChannel: 'in store',
-    //   type: 'in store',
-    //   accountId: 'o3pKg694J6CDooVorE8NhjmxWxMzgdioqwW6G',
-    //   amount: 89.4,
-    //   pending: false,
-    //   category: 'Food and Drink',
-    //   date: '2024-06-19',
-    //   image: null
-    // }
-
   return (
     <Table>
   <TableHeader className="bg-[#f9f8fb]">
@@ -75,7 +47,6 @@ const TransactionsTable = (props: TransactionTableProps) => {
   <TableBody>
     {transactions.map((transaction: Transaction) => {
       const dateFormat = transaction.date.split('-');
-      console.log(`${dateFormat[0]}-${dateFormat[1]}-${dateFormat[2].substring(0, 2)}`);
       const status = getTransactionStatus(new Date(`${dateFormat[0]}-${dateFormat[1]}-${dateFormat[2].substring(0, 2)}`));
       const amount = formatAmount(transaction.amount);
       const isDebit = transaction.type === 'in store' || transaction.type === 'debit';

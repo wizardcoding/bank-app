@@ -5,6 +5,8 @@ import BankCard from "@/components/ui/BankCard";
 
 const MyBanks = async () => {
   const loggedUser = await isLogged();
+  const{ firstName = '', lastName = '' } = loggedUser;
+  const fullName = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
   const accounts = await getAccounts({userId: loggedUser?.$id});
   if(!accounts) {
     return;
@@ -17,7 +19,7 @@ const MyBanks = async () => {
         <BankCard
           key={'account-' + account.id} 
           account={account}
-          userName={account.name}
+          userName={fullName}
         />
       )
     });

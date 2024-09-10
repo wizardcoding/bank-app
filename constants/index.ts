@@ -58,7 +58,7 @@ export const topCategoryStyles = {
       count: "text-blue-700",
     },
     progress: {
-      bg: "bg-blue-100",
+      progressBg: "bg-blue-100",
       indicator: "bg-blue-700",
     },
     icon: "/icons/monitor.svg",
@@ -71,7 +71,7 @@ export const topCategoryStyles = {
       count: "text-success-700",
     },
     progress: {
-      bg: "bg-success-100",
+      progressBg: "bg-success-100",
       indicator: "bg-success-700",
     },
     icon: "/icons/coins.svg",
@@ -84,7 +84,7 @@ export const topCategoryStyles = {
       count: "text-pink-700",
     },
     progress: {
-      bg: "bg-pink-100",
+      progressBg: "bg-pink-100",
       indicator: "bg-pink-700",
     },
     icon: "/icons/shopping-bag.svg",
